@@ -1,0 +1,19 @@
+{
+    "name": "magefan/module-product-label",
+    "description": "Product Label extension for Magento 2",
+    "require": {
+        "magefan/module-community" : ">=2.1.19",
+        "magefan/module-dynamic-product-attributes" : "2.1.0"
+    },
+    "type": "magento2-module",
+    "license": "EULA",
+    "version": "2.0.0",
+    "autoload": {
+        "files": [
+          "registration.php"
+        ],
+        "psr-4": {
+            "Magefan\\ProductLabel\\": ""
+        }
+    }
+}

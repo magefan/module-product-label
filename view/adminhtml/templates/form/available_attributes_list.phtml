@@ -1,0 +1,122 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+?>
+
+<div id="search-for-attributes" style="display: none; width: 0px;">
+    <div style="padding: 5px;">
+        <button class="action-close _close" onclick="closeNav()"></button>
+    </div>
+
+    <div style="padding: 10px; font-weight: 600; text-align: center; font-size: 18px;"><?= $escaper->escapeHtml(__('List Of Available Attributes')) ?></div>
+
+    <input type="text" id="attribute-input" onkeyup="filterItems()" placeholder="<?= $escaper->escapeHtml(__('Search for attributes...')) ?>">
+
+    <div id="attributes-list">
+        <div class="product-attributes">
+            <div style="padding: 10px 0px; font-weight: 600;"><?= $escaper->escapeHtml(__('Product Attributes')) ?></div>
+            <ul>
+                <?php foreach ($block->getProductAttributesList() as $attributeCode => $attributeLabel) {?>
+                    <li title="<?= $escaper->escapeHtml($attributeLabel) ?>">{<?= $escaper->escapeHtml($attributeCode) ?>}</li>
+                <?php } ?>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div style="position: fixed; right: 0; top: 50%; z-index: 900;">
+    <button class="openbtn show-attr-list" onclick="openNav()">☰ <?=$escaper->escapeHtml(__('Attributes List')) ?></button>
+</div>
+
+<script type="text/javascript">
+    function filterItems()
+    {
+        var filterValue = document.getElementById("attribute-input").value.toUpperCase();
+
+        document.querySelectorAll("#attributes-list li").forEach((el, i) => {
+            el.style.display = (el.innerText.toUpperCase().includes(filterValue)) ? '' : 'none';
+        });
+    }
+
+    function openNav()
+    {
+        let el = document.getElementById("search-for-attributes");
+        el.style.width = "350px";
+        el.style.display = "";
+    }
+
+    function closeNav()
+    {
+        let el = document.getElementById("search-for-attributes");
+        el.style.width = "0";
+        el.style.display = "none";
+    }
+</script>
+
+<style>
+    #search-for-attributes {
+        background-color: #eee;
+        padding: 10px;
+        overflow-y: auto;
+        max-height: 100vh;
+        position: fixed;
+        z-index: 9999999;
+        top: 0;
+        right: 0;
+        overflow-x: hidden;
+        transition: 0.5s;
+    }
+
+    #search-for-attributes #attribute-input {
+        width: 100%;
+        font-size: 14px;
+        padding: 10px;
+        border: 1px solid #ddd;
+        margin-bottom: 12px;
+    }
+
+    #search-for-attributes #attributes-list {
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    #search-for-attributes #attributes-list li {
+        border-bottom: 1px solid #ddd;
+        padding: 5px;
+        font-size: 12px;
+    }
+
+    #search-for-attributes #attributes-list li:hover:not(.header) {
+        background-color: #eee;
+    }
+
+    #search-for-attributes::-webkit-scrollbar {
+        width: 5px
+    }
+
+    #search-for-attributes::-webkit-scrollbar-track {
+        background-color: #e4e4e4;
+        border-radius: 100px
+    }
+
+    #search-for-attributes::-webkit-scrollbar-thumb {
+        background-color: #999;
+        border-radius: 100px
+    }
+
+    .openbtn {
+        font-size: 18px;
+        cursor: pointer;
+        padding: 10px 15px;
+        border: none;
+        background-color: #ececec;
+        color: #333;
+    }
+
+    .openbtn:hover {
+        background-color: #dbdbdb;
+    }
+</style>

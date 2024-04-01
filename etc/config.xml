@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <mfproductlabel>
+            <general>
+                <enabled>0</enabled>
+                <mfmodule>ProductLabel</mfmodule>
+                <mftype>1</mftype>
+                <labels_per_product>1</labels_per_product>
+                <pp_selector>.fotorama__stage__shaft</pp_selector>
+                <pl_selector>.product-image-wrapper</pl_selector>
+            </general>
+        </mfproductlabel>
+
+        <system>
+            <media_storage_configuration>
+                <allowed_resources>
+                    <media_gallery_image_folders>
+                        <magefan_tc>magefan_product_label</magefan_tc>
+                    </media_gallery_image_folders>
+                </allowed_resources>
+            </media_storage_configuration>
+        </system>
+
+    </default>
+</config>

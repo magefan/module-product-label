@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+?>
+
+<style>
+    fieldset[data-index="container_image"] .admin__field .admin__field-label,
+    fieldset[data-index="container_text_or_html"] .admin__field .admin__field-label {height: auto!important;position: relative !important;width: fit-content !important;}
+
+    fieldset[data-index="container_image"]  [data-index="image"] .admin__field-label,
+    fieldset[data-index="container_image"]  [data-index="pp_image"] .admin__field-label,
+    fieldset[data-index="container_text_or_html"]  [data-index="text_or_html"] .admin__field-label,
+    fieldset[data-index="container_text_or_html"]  [data-index="pp_text_or_html"] .admin__field-label {display: none;}
+
+    fieldset[data-index="container_image"] > .admin__field-control,
+    fieldset[data-index="container_text_or_html"] > .admin__field-control {padding: 20px;border: 1px solid #ccc;}
+    fieldset[data-index="container_text_or_html"] .admin__field-note {background-color: #fffbbb;padding: 10px;}
+
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="pp_position"],
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_text_or_html"],
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_image"],
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="pp_label_type"],
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_shape"],
+    body.use_the_same_label_for_product_page [data-index="product_page"] .html-preview
+    {display: none !important;}
+</style>
+
+<style>
+    .custom_position_description {display: none;}
+
+    body[position="custom"]  [data-index="position"] .custom_position_description,
+    body[pp_position="custom"] [data-index="pp_position"] .custom_position_description {
+        display: block;
+        background-color: #f4f90057;
+        padding: 20px;
+        width: fit-content;
+    }
+</style>

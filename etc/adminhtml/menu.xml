@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+    	<add id="Magefan_ProductLabel::elements" title="Product Label" module="Magefan_ProductLabel" parent="Magento_Backend::marketing" sortOrder="30"  resource="Magefan_ProductLabel::elements"/>
+        <add id="Magefan_ProductLabel::rule" title=" Rules" module="Magefan_ProductLabel" parent="Magefan_ProductLabel::elements" sortOrder="10" action="mfproductlabel/rule/" resource="Magefan_ProductLabel::rule"/>
+        <add id="Magefan_ProductLabel::configuration" title="Configuration" module="Magefan_ProductLabel" parent="Magefan_ProductLabel::elements" sortOrder="20" action="adminhtml/system_config/edit/section/mfproductlabel" resource="Magefan_ProductLabel::mfproductlabel"/>
+    </menu>
+</config>

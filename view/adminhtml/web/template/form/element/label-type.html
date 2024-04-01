@@ -1,0 +1,44 @@
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+
+<!-- ko if: (visible) -->
+
+<div class="label-type">
+    <!-- ko foreach: {data: labelTypes, as: 'item'} -->
+        <!-- ko foreach: {data: item, as: 'labelType'} -->
+        <div class="type" data-bind="attr: {
+        'data-mf-type-selected': element.isActive(labelType),
+        'data-mf-type': labelType.id},
+        click: function(data) {element.selectType(data)},
+        clickBubble: false,
+        text: labelType.label"
+        ></div>
+        <!-- /ko -->
+    <!-- /ko -->
+</div>
+<!-- /ko -->
+
+<style>
+    .label-type {display: flex; column-gap: 10px;}
+    .label-type .type {background-color:#ccc; padding: 10px 15px; color: #fff; font-weight: bold;}
+    .label-type .type[data-mf-type-selected="1"] {background-color:#eb5202;}
+
+    [data-index="container_image"],
+    [data-index="container_shape"],
+    [data-index="container_text_or_html"]
+    {display: none;}
+
+
+    body[data_label_type="0"] .fieldset-wrapper[data-index="product_list"] [data-index="container_image"],
+    body[data_label_type="1"] .fieldset-wrapper[data-index="product_list"] [data-index="container_shape"],
+    body[data_label_type="2"] .fieldset-wrapper[data-index="product_list"] [data-index="container_text_or_html"],
+
+    body[data_pp_label_type="0"] .fieldset-wrapper[data-index="product_page"] [data-index="container_image"],
+    body[data_pp_label_type="1"] .fieldset-wrapper[data-index="product_page"] [data-index="container_shape"],
+    body[data_pp_label_type="2"] .fieldset-wrapper[data-index="product_page"] [data-index="container_text_or_html"]
+    {display: block;}
+</style>

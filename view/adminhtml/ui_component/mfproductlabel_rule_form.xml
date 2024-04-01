@@ -1,0 +1,639 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+ -->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form_data_source</item>
+            <item name="deps" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form_data_source</item>
+            <item name="namespace" xsi:type="string">mfproductlabel_rule_form</item>
+        </item>
+        <item name="buttons" xsi:type="array">
+            <item name="back" xsi:type="string">Magefan\Community\Block\Adminhtml\Edit\BackButton</item>
+            <item name="delete" xsi:type="string">Magefan\Community\Block\Adminhtml\Edit\DeleteButton</item>
+            <item name="reset" xsi:type="string">Magefan\Community\Block\Adminhtml\Edit\ResetButton</item>
+            <item name="save" xsi:type="string">Magefan\Community\Block\Adminhtml\Edit\SaveButton</item>
+            <item name="save_and_continue" xsi:type="string">Magefan\Community\Block\Adminhtml\Edit\SaveAndContinueButton</item>
+            <item name="save_and_apply" xsi:type="string">Magefan\ProductLabel\Block\Adminhtml\Edit\SaveAndApplyButton</item>
+        </item>
+
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+        <item name="config" xsi:type="array">
+            <item name="dataScope" xsi:type="string">data</item>
+            <item name="namespace" xsi:type="string">mfproductlabel_rule_form</item>
+        </item>
+    </argument>
+    <dataSource name="mfproductlabel_rule_form_data_source">
+        <argument name="dataProvider" xsi:type="configurableObject">
+            <argument name="class" xsi:type="string">Magefan\ProductLabel\Ui\DataProvider\Rule\Form\RuleDataProvider</argument>
+            <argument name="name" xsi:type="string">mfproductlabel_rule_form_data_source</argument>
+            <argument name="primaryFieldName" xsi:type="string">id</argument>
+            <argument name="requestFieldName" xsi:type="string">id</argument>
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="submit_url" xsi:type="url" path="*/*/save"/>
+                    <!-- <item name="data" xsi:type="array" /> -->
+                </item>
+            </argument>
+        </argument>
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+    </dataSource>
+
+    <fieldset name="general">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="label" xsi:type="string">General</item>
+            </item>
+        </argument>
+
+        <field name="id">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="dataScope" xsi:type="string">id</item>
+                </item>
+            </argument>
+        </field>
+        <field name="status">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Enable Rule</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="dataScope" xsi:type="string">status</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="default" xsi:type="number">1</item>
+                </item>
+            </argument>
+        </field>
+        <field name="name">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Rule Name</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="dataScope" xsi:type="string">name</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="priority">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">text</item>
+                    <item name="label" xsi:type="string" translate="true">Priority</item>
+                    <item name="formElement" xsi:type="string">input</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                    <item name="dataScope" xsi:type="string">priority</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="notice" xsi:type="string" translate="true">The greater the number, the later rule will be processed.</item>
+                </item>
+            </argument>
+        </field>
+        <field name="store_ids">
+            <argument name="data" xsi:type="array">
+                <item name="options" xsi:type="object">Magento\Cms\Ui\Component\Listing\Column\Cms\Options</item>
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="string">Store View</item>
+                    <item name="formElement" xsi:type="string">multiselect</item>
+                    <item name="wysiwyg" xsi:type="boolean">true</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="dataScope" xsi:type="string">store_ids</item>
+                    <item name="sortOrder" xsi:type="number">40</item>
+                    <item name="validation" xsi:type="array">
+                        <item name="required-entry" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="customer_group_ids" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">page</item>
+                    <item name="sortOrder" xsi:type="number">50</item>
+                    <item name="label" xsi:type="string" translate="true">Customer Group (Extra)</item>
+                    <item name="dataScope" xsi:type="string">customer_group_ids</item>
+                </item>
+            </argument>
+            <settings>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">false</rule>
+                </validation>
+                <dataType>number</dataType>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magento\CatalogRule\Model\Rule\CustomerGroupsOptionsProvider"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+        <field name="active_from">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="label" xsi:type="string" translate="true">Active From (Extra)</item>
+                    <item name="formElement" xsi:type="string">date</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="dataScope" xsi:type="string">active_from</item>
+                    <item name="sortOrder" xsi:type="number">60</item>
+                    <item name="options" xsi:type="array">
+                        <item name="dateFormat" xsi:type="string">MM/dd/yyyy</item>
+                        <item name="timeFormat" xsi:type="string">HH:mm:ss</item>
+                        <item name="showsTime" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+        <field name="active_to">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">string</item>
+                    <item name="label" xsi:type="string" translate="true">Active To (Extra)</item>
+                    <item name="formElement" xsi:type="string">date</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="dataScope" xsi:type="string">active_to</item>
+                    <item name="sortOrder" xsi:type="number">70</item>
+                    <item name="options" xsi:type="array">
+                        <item name="dateFormat" xsi:type="string">MM/dd/yyyy</item>
+                        <item name="timeFormat" xsi:type="string">HH:mm:ss</item>
+                        <item name="showsTime" xsi:type="boolean">true</item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+
+        <field name="discard_subsequent_rules">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="dataType" xsi:type="string">boolean</item>
+                    <item name="label" xsi:type="string" translate="true">Discard Subsequent Rules (Extra)</item>
+                    <item name="formElement" xsi:type="string">checkbox</item>
+                    <item name="prefer" xsi:type="string">toggle</item>
+                    <item name="source" xsi:type="string">rule</item>
+                    <item name="sortOrder" xsi:type="number">80</item>
+                    <item name="dataScope" xsi:type="string">discard_subsequent_rules</item>
+                    <item name="valueMap" xsi:type="array">
+                        <item name="true" xsi:type="number">1</item>
+                        <item name="false" xsi:type="number">0</item>
+                    </item>
+                    <item name="default" xsi:type="number">0</item>
+
+                    <item name="tooltip" xsi:type="array">
+                        <item name="description" xsi:type="string">
+                            If the option is enabled only one label may be displayed per position. Rules with the lowest priority will be ignored.
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </field>
+    </fieldset>
+
+    <fieldset name="display_settings">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="label" xsi:type="string">Display Settings</item>
+            </item>
+        </argument>
+
+        <fieldset name="product_list">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string">Product List</item>
+                    <item name="opened" xsi:type="boolean">true</item>
+                </item>
+            </argument>
+
+            <field name="position">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magefan\ProductLabel\Model\Config\Source\Positions</item>
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Label Position</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="source" xsi:type="string">rule</item>
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="dataScope" xsi:type="string">position</item>
+                        <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/position</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                        <item name="additionalInfo" xsi:type="string">
+                            <![CDATA[
+                                <div class="custom_position_description">
+                                    <p>To insert label in custom position need to add next string in your template:<br><br>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <br>
+                                        <br>
+                                        <hr>
+                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                    </p>
+                                </div>
+                            ]]>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+
+            <field name="label_type" sortOrder="30" formElement="input">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/label-type</item>
+                    </item>
+                </argument>
+                <settings>
+                    <label translate="true">Label Type</label>
+                    <dataType>number</dataType>
+                </settings>
+            </field>
+
+            <container name="container_image">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string">Image</item>
+                        <item name="dataScope" xsi:type="string"></item>
+                        <item name="breakLine" xsi:type="boolean">true</item>
+                        <item name="formElement" xsi:type="string">container</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/components/group</item>
+                    </item>
+                </argument>
+
+                <field name="image" sortOrder="10" formElement="imageUploader">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="collapsible" xsi:type="boolean">true</item>
+                            <item name="label" xsi:type="string" translate="true">Image</item>
+                            <item name="sortOrder" xsi:type="number">40</item>
+                            <item name="source" xsi:type="string">magefan_product_label_rule</item>
+                            <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/image-uploader</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <elementTmpl>ui/form/element/uploader/image</elementTmpl>
+                        <dataType>string</dataType>
+                        <label translate="true">Media Gallery</label>
+                        <visible>true</visible>
+                        <required>false</required>
+                    </settings>
+                    <formElements>
+                        <imageUploader>
+                            <settings>
+                                <required>false</required>
+                                <uploaderConfig>
+                                    <param xsi:type="url" name="url" path="mfproductlabel/rule/upload"/>
+                                </uploaderConfig>
+                                <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                                <openDialogTitle>Image</openDialogTitle>
+                                <initialMediaGalleryOpenSubpath>magefan_product_label</initialMediaGalleryOpenSubpath>
+                            </settings>
+                        </imageUploader>
+                    </formElements>
+                </field>
+
+                <field name="image_css">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Image CSS (Plus)</item>
+                            <item name="formElement" xsi:type="string">textarea</item>
+                            <item name="sortOrder" xsi:type="number">45</item>
+                            <item name="dataScope" xsi:type="string">image_css</item>
+                            <item name="source" xsi:type="string">rule</item>
+                            <item name="notice" xsi:type="string" translate="true">
+                                Ex.: width:50%; opacity:0.5; transform: rotate(-45deg);
+                            </item>
+                        </item>
+                    </argument>
+                </field>
+
+                <field name="redirect_url">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Redirect Url (Plus)</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="sortOrder" xsi:type="number">50</item>
+                            <item name="dataScope" xsi:type="string">redirect_url</item>
+                            <item name="source" xsi:type="string">rule</item>
+                            <item name="notice" xsi:type="string" translate="true">
+                                Use URL path here. To get https://domain.com/sale just use sale.
+                            </item>
+                        </item>
+                    </argument>
+                </field>
+
+                <field name="image_alt">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Image Alt</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="sortOrder" xsi:type="number">60</item>
+                            <item name="dataScope" xsi:type="string">image_alt</item>
+                            <item name="source" xsi:type="string">rule</item>
+                        </item>
+                    </argument>
+                </field>
+            </container>
+        </fieldset>
+
+        <fieldset name="product_page">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="collapsible" xsi:type="boolean">true</item>
+                    <item name="label" xsi:type="string">Product Page</item>
+                </item>
+            </argument>
+
+            <htmlContent name="html_content_action_switcher">
+                <block name="mf_action_switcher" template="Magefan_ProductLabel::form/action_switcher.phtml"/>
+            </htmlContent>
+
+            <field name="use_the_same_label_for_product_page" formElement="checkbox">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="source" xsi:type="string">rule</item>
+                        <item name="default" xsi:type="number">1</item>
+                        <item name="prefer" xsi:type="string">toggle</item>
+                        <item name="label" xsi:type="string" translate="true">Use the Same Label for Product Page (Plus)</item>
+                        <item name="sortOrder" xsi:type="number">0</item>
+                    </item>
+                </argument>
+                <settings>
+                    <dataType>boolean</dataType>
+                    <label> </label>
+                    <visible>true</visible>
+                    <dataScope>use_the_same_label_for_product_page</dataScope>
+                </settings>
+                <formElements>
+                    <checkbox>
+                        <settings>
+                            <valueMap>
+                                <map name="false" xsi:type="number">0</map>
+                                <map name="true" xsi:type="number">1</map>
+                            </valueMap>
+                        </settings>
+                    </checkbox>
+                </formElements>
+            </field>
+
+            <field name="pp_position">
+                <argument name="data" xsi:type="array">
+                    <item name="options" xsi:type="object">Magefan\ProductLabel\Model\Config\Source\Positions</item>
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string" translate="true">Label Position</item>
+                        <item name="formElement" xsi:type="string">select</item>
+                        <item name="dataType" xsi:type="string">text</item>
+                        <item name="source" xsi:type="string">rule</item>
+                        <item name="sortOrder" xsi:type="number">20</item>
+                        <item name="dataScope" xsi:type="string">pp_position</item>
+                        <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/position</item>
+                        <item name="validation" xsi:type="array">
+                            <item name="required-entry" xsi:type="boolean">true</item>
+                        </item>
+                        <item name="additionalInfo" xsi:type="string">
+                            <![CDATA[
+                                <div class="custom_position_description">
+                                    <p>To insert label in custom position need to add next string in your template:<br><br>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <br>
+                                        <br>
+                                        <hr>
+                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                    </p>
+                                </div>
+                            ]]>
+                        </item>
+                    </item>
+                </argument>
+            </field>
+
+            <field name="pp_label_type" sortOrder="30" formElement="input">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/label-type</item>
+                    </item>
+                </argument>
+                <settings>
+                    <label translate="true">Label Type</label>
+                    <dataType>number</dataType>
+                </settings>
+            </field>
+
+            <container name="container_image">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="label" xsi:type="string">Image</item>
+                        <item name="dataScope" xsi:type="string"></item>
+                        <item name="breakLine" xsi:type="boolean">true</item>
+                        <item name="formElement" xsi:type="string">container</item>
+                        <item name="component" xsi:type="string">Magento_Ui/js/form/components/group</item>
+                    </item>
+                </argument>
+
+                <field name="pp_image" sortOrder="10" formElement="imageUploader">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="collapsible" xsi:type="boolean">true</item>
+                            <item name="label" xsi:type="string" translate="true">Image</item>
+                            <item name="sortOrder" xsi:type="number">40</item>
+                            <item name="source" xsi:type="string">magefan_product_label_rule</item>
+                            <item name="component" xsi:type="string">Magefan_ProductLabel/js/form/element/image-uploader</item>
+                        </item>
+                    </argument>
+                    <settings>
+                        <elementTmpl>ui/form/element/uploader/image</elementTmpl>
+                        <dataType>string</dataType>
+                        <label translate="true">Media Gallery</label>
+                        <visible>true</visible>
+                        <required>false</required>
+                    </settings>
+                    <formElements>
+                        <imageUploader>
+                            <settings>
+                                <required>false</required>
+                                <uploaderConfig>
+                                    <param xsi:type="url" name="url" path="mfproductlabel/rule/upload"/>
+                                </uploaderConfig>
+                                <previewTmpl>Magento_Catalog/image-preview</previewTmpl>
+                                <openDialogTitle>Image</openDialogTitle>
+                                <initialMediaGalleryOpenSubpath>magefan_product_label</initialMediaGalleryOpenSubpath>
+                            </settings>
+                        </imageUploader>
+                    </formElements>
+                </field>
+
+                <field name="pp_image_css">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Image CSS (Plus)</item>
+                            <item name="formElement" xsi:type="string">textarea</item>
+                            <item name="sortOrder" xsi:type="number">45</item>
+                            <item name="dataScope" xsi:type="string">pp_image_css</item>
+                            <item name="source" xsi:type="string">rule</item>
+                            <item name="notice" xsi:type="string" translate="true">
+                                Ex.: width:50%; opacity:0.5; transform: rotate(-45deg);
+                            </item>
+                        </item>
+                    </argument>
+                </field>
+
+                <field name="pp_redirect_url">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Redirect Url (Plus)</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="sortOrder" xsi:type="number">50</item>
+                            <item name="dataScope" xsi:type="string">pp_redirect_url</item>
+                            <item name="source" xsi:type="string">rule</item>
+                            <item name="notice" xsi:type="string" translate="true">
+                                Use URL path here. To get https://domain.com/sale just use sale.
+                            </item>
+                        </item>
+                    </argument>
+                </field>
+
+                <field name="pp_image_alt">
+                    <argument name="data" xsi:type="array">
+                        <item name="config" xsi:type="array">
+                            <item name="dataType" xsi:type="string">text</item>
+                            <item name="label" xsi:type="string" translate="true">Image Alt</item>
+                            <item name="formElement" xsi:type="string">input</item>
+                            <item name="sortOrder" xsi:type="number">60</item>
+                            <item name="dataScope" xsi:type="string">pp_image_alt</item>
+                            <item name="source" xsi:type="string">rule</item>
+                        </item>
+                    </argument>
+                </field>
+            </container>
+        </fieldset>
+    </fieldset>
+
+
+    <fieldset name="where_to_display">
+        <argument name="data" xsi:type="array">
+            <item name="config" xsi:type="array">
+                <item name="collapsible" xsi:type="boolean">true</item>
+                <item name="label" xsi:type="string">Where To Display</item>
+            </item>
+        </argument>
+
+        <container name="conditions_serialized">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="component" xsi:type="string">Magefan_ProductLabel/js/lib/core/collection</item>
+                    <item name="className" xsi:type="string">mfproductlabel-what-to-display</item>
+                </item>
+            </argument>
+            <htmlContent name="html_content_conditions">
+                <argument name="block" xsi:type="object">Magefan\ProductLabel\Block\Adminhtml\Rule\Edit\Conditions</argument>
+            </htmlContent>
+        </container>
+
+        <container name="preview_button">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="label" xsi:type="boolean">false</item>
+                    <item name="formElement" xsi:type="string">container</item>
+                    <item name="componentType" xsi:type="string">container</item>
+                    <item name="component" xsi:type="string">Magento_Ui/js/form/components/button</item>
+                    <item name="title" xsi:type="string" translate="true">Preview Products (Plus)</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="targetName" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form.where_to_display.products_grid</item>
+                            <item name="actionName" xsi:type="string">visible</item>
+                            <item name="params" xsi:type="array">
+                                <item name="0" xsi:type="boolean">true</item>
+                            </item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="targetName" xsi:type="string">mfproductlabel_product_listing.mfproductlabel_product_listing_data_source</item>
+                            <item name="actionName" xsi:type="string">reload</item>
+                        </item>
+                        <item name="2" xsi:type="array">
+                            <item name="targetName" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form.where_to_display.hide_preview_button</item>
+                            <item name="actionName" xsi:type="string">visible</item>
+                            <item name="params" xsi:type="array">
+                                <item name="0" xsi:type="boolean">true</item>
+                            </item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+        </container>
+        <button name="hide_preview_button">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="sortOrder" xsi:type="number">20</item>
+                    <item name="buttonClasses" xsi:type="string">hide-preview-button</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="actions" xsi:type="array">
+                        <item name="0" xsi:type="array">
+                            <item name="targetName" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form.where_to_display.products_grid</item>
+                            <item name="actionName" xsi:type="string">visible</item>
+                            <item name="params" xsi:type="array">
+                                <item name="0" xsi:type="boolean">false</item>
+                            </item>
+                        </item>
+                        <item name="1" xsi:type="array">
+                            <item name="targetName" xsi:type="string">mfproductlabel_rule_form.mfproductlabel_rule_form.where_to_display.hide_preview_button</item>
+                            <item name="actionName" xsi:type="string">visible</item>
+                            <item name="params" xsi:type="array">
+                                <item name="0" xsi:type="boolean">false</item>
+                            </item>
+                        </item>
+                    </item>
+                </item>
+            </argument>
+            <settings>
+                <displayAsLink>true</displayAsLink>
+                <title translate="true">Hide Products (Plus)</title>
+            </settings>
+        </button>
+        <insertListing name="products_grid">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="cssclass" xsi:type="string">mf-product-grid-insert-listing</item>
+                    <item name="autoRender" xsi:type="boolean">false</item>
+                    <item name="visible" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="number">30</item>
+                    <item name="externalProvider" xsi:type="string">mfproductlabel_product_listing.mfproductlabel_product_listing_data_source</item>
+                    <item name="ns" xsi:type="string">mfproductlabel_product_listing</item>
+                    <item name="externalFilterMode" xsi:type="boolean">true</item>
+                    <item name="params" xsi:type="array">
+                        <item name="namespace" xsi:type="string">mfproductlabel_product_listing</item>
+                        <item name="rule_id" xsi:type="string">${ $.rule_id }</item>
+                    </item>
+                </item>
+            </argument>
+        </insertListing>
+    </fieldset>
+</form>

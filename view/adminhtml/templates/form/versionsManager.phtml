@@ -1,0 +1,92 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+?>
+
+<?php
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+$getModuleVersion = $objectManager->get(\Magefan\Community\Api\GetModuleVersionInterface::class);
+
+$currentPlan = 'Basic';
+
+if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
+   return;
+} elseif ($getModuleVersion->execute('Magefan_ProductLabelPlus')) {
+    $currentPlan = 'Plus';
+}
+?>
+
+<script type="text/javascript">
+    var versionsManager = {
+        _currentPlan: '<?= /*@noEscape*/ $currentPlan ?>',
+        _selector: {
+            'Extra': [
+                '[name="customer_group_ids"]',
+                '[name=discard_subsequent_rules]',
+                '[data-index="product_list"] [data-mf-type="1"]',
+                '[data-index="product_page"] [data-mf-type="1"]',
+            ],
+            <?php if ($currentPlan != 'Plus') { ?>
+            'Plus': [
+                '.show-attr-list',
+                '[data-index="product_list"] [data-mf-type="2"]',
+                '[data-index="product_page"] [data-mf-type="2"]',
+                '[name="use_the_same_label_for_product_page"]',
+                '.mfproductlabel-what-to-display',
+                '[data-index="preview_button"]',
+                '[data-index="hide_preview_button"]',
+                '[data-index="position"]',
+                '[data-index="pp_position"]'
+            ]
+            <?php } ?>
+        },
+
+        initListener: function () {
+            const observer = new MutationObserver(mutations => {
+                mutations.forEach(mutation => {
+                    for (let plan in versionsManager._selector) {
+                        let planFeatures = versionsManager._selector[plan];
+
+                        planFeatures.forEach(selector => {
+                            if (document.querySelector(selector)) {
+                                const element = document.querySelector(selector);
+                                element.addEventListener('click', function () {
+                                    if (versionsManager._currentPlan != plan) {
+                                        versionsManager.showAlert(plan)
+                                    }
+                                });
+
+                                // Remove the selector from _selector
+                                versionsManager._selector[plan] = versionsManager._selector[plan].filter(item => item !== selector);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Start observing the document
+            observer.observe(document.body, { childList: true, subtree: true });
+        },
+
+        showAlert: function (extensionPlan) {
+            require(["jquery", "Magento_Ui/js/modal/alert"], function($, alert) {
+                alert({
+                    title: "You cannot use this option.",
+                    content: "This feature is available in <strong>" + extensionPlan + "</strong> plan only.",
+                    buttons: [{
+                        text: "Upgrade Plan Now",
+                        class: "action primary accept",
+                        click: function () {
+                            window.open("https://magefan.com");
+                        }
+                    }]
+                });
+            });
+        }
+    };
+
+    versionsManager.initListener();
+
+</script>

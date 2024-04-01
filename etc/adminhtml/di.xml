@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Magefan\ProductLabel\ImageUpload" type="Magefan\ProductLabel\Model\ImageUploader">
+        <arguments>
+            <argument name="baseTmpPath" xsi:type="string">magefan_product_label/tmp</argument>
+            <argument name="basePath" xsi:type="string">magefan_product_label</argument>
+            <argument name="allowedExtensions" xsi:type="array">
+                <item name="jpg" xsi:type="string">jpg</item>
+                <item name="jpeg" xsi:type="string">jpeg</item>
+                <item name="gif" xsi:type="string">gif</item>
+                <item name="png" xsi:type="string">png</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="Magefan\ProductLabel\Controller\Adminhtml\Rule\Upload">
+        <arguments>
+            <argument name="imageUploader" xsi:type="object">Magefan\ProductLabel\ImageUpload</argument>
+        </arguments>
+    </type>
+</config>

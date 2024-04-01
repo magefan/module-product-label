@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+ -->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="mfproductlabel_info"/>
+
+    <body>
+        <referenceContainer name="after.body.start">
+            <block name="mf_js_css" template="Magefan_ProductLabel::form/css.phtml"/>
+            <block name="mf_versions" template="Magefan_ProductLabel::form/versionsManager.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="content">
+            <block class="Magefan\ProductLabel\Block\Adminhtml\Rule\Edit\AvailableAttributes" name="availableAttributes"/>
+            <uiComponent name="mfproductlabel_rule_form"/>
+        </referenceContainer>
+    </body>
+</page>

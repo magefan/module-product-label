@@ -1,0 +1,31 @@
+<?php
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+?>
+<?php
+/** @var $block \Magefan\ProductLabel\Block\Label */
+
+    $productLabels = $block->getProductLabels();
+?>
+
+<?php if ($productLabels) { ?>
+    <div class="mf-label-container">
+        <?php foreach ($productLabels as $position => $labels) { ?>
+            <div class="mf-label mf-label-position-<?= $escaper->escapeHtml($position) ?>">
+                <?php foreach ($labels as $label) { ?>
+                    <div class="mf-label-wrapper">
+                        <?php if (isset($label['text_or_html'])) { ?>
+                            <span class="mf-label-text_or_html"><?= $escaper->escapeHtml($label['text_or_html']) ?></span>
+                        <?php } ?>
+
+                        <?php if (isset($label['image_url'])) { ?>
+                            <img src="<?= $escaper->escapeHtml($label['image_url']) ?>" alt="<?= $escaper->escapeHtml($label['image_alt']) ?>" title="<?= $escaper->escapeHtml($label['image_alt']) ?>" />
+                        <?php } ?>
+                    </div>
+                <?php } ?>
+            </div>
+        <?php } ?>
+    </div>
+<?php } ?>

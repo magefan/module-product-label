@@ -1,0 +1,28 @@
+<!--
+/**
+ * Copyright © Magefan (support@magefan.com). All rights reserved.
+ * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="mfproductlabel_listing_data_source" xsi:type="string">Magefan\ProductLabel\Ui\DataProvider\Rule\Rule</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Magefan\ProductLabel\Model\Store\Ui\Component\Listing\Column\Store" type="Magento\Store\Ui\Component\Listing\Column\Store">
+        <arguments>
+            <argument name="storeKey" xsi:type="string">store_id</argument>
+        </arguments>
+    </virtualType>
+
+
+    <preference for="Magefan\ProductLabel\Api\RuleRepositoryInterface" type="Magefan\ProductLabel\Model\RuleRepository"/>
+    <preference for="Magefan\ProductLabel\Api\RuleCollectionInterface" type="Magefan\ProductLabel\Model\ResourceModel\Rule\Collection"/>
+    <preference for="Magefan\ProductLabel\Api\Data\RuleInterface" type="Magefan\ProductLabel\Model\Rule"/>
+    <preference for="Magefan\ProductLabel\Api\RuleResourceModelInterface" type="Magefan\ProductLabel\Model\ResourceModel\Rule"/>
+    <preference for="Magefan\ProductLabel\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
+    <preference for="Magefan\ProductLabel\Api\PositionsInterface" type="Magefan\ProductLabel\Model\Config\Source\Positions"/>
+</config>
