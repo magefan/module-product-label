@@ -10,8 +10,7 @@
     ],
     "version": "2.0.0",
     "require": {
-        "magefan/module-community" : ">=2.1.19",
-        "magefan/module-dynamic-product-attributes" : "2.1.0"
+        "magefan/module-community" : ">=2.1.19"
     },
     "autoload": {
         "files": [
