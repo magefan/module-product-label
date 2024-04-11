@@ -98,7 +98,7 @@ You can create product labels for each customer group. Offer higher discounts fo
 ## Support
 If you have any issues, please [contact us](mailto:support@magefan.com)
 then if you still need help, open a bug report in GitHub's
-[issue tracker](https://github.com/magefan/module-google-tag-manager/issues).
+[issue tracker](https://github.com/magefan/module-product-label/issues).
 
 ## Need More Features?
 Please contact us to get a quote
