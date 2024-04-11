@@ -29,7 +29,7 @@ No need to handle product labels in Magento manually. Just set up the rules once
 
 ## Features
 
-* **Create Text-, Shape- and Image-Based Product Labels in Magento**
+### Create Text-, Shape- and Image-Based Product Labels in Magento
 
 Magento 2 Product Labels is a robust tool that works dynamically. It helps you to drive attention to certain items and stimulate a purchasing decision. You can create any product labels using this tool 一 text, shape or image. 
 
@@ -41,8 +41,8 @@ Preview how your label will be displayed on the product, category and other list
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/product-labels-in-magento-2_2.png">
 </p>
 
+### Use Ready-Made Product Labels Library
 
-* ***Use Ready-Made Product Labels Library**
 You can upload any image to create outstanding image labels for your store. You can use the extensive library the Magento 2 Product Label Extension comes with. 
 
 Choose from a variety of labels for any occasion, upload them to the label rules and show them dynamically. The work is reduced to a few steps with the ready-made labels from Magefan.   
@@ -51,7 +51,7 @@ Choose from a variety of labels for any occasion, upload them to the label rules
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/magento-product-labels.png">
 </p>
 
-* **Use Conditions to Display Product Labels**
+### Use Conditions to Display Product Labels
 
 Adding product labels for each product in your store is not even the case. It would be more than time ineffective. That’s why we’ve created Magento 2 Product label rules. 
 
@@ -63,7 +63,7 @@ Opportunities are limitless. And you can also use dynamic attributes to display 
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/product-label-rules-in-magento.png">
 </p>
 
-* **Show Multiple Labels per One Product**
+### Show Multiple Labels per One Product
 
 Do you have a lot to offer to your customers? Tell them about it. Magento 2 Product Labels Extension allows you to add more than one product label to product pages. 
 
@@ -75,7 +75,7 @@ Run several marketing campaigns at the same time to boost sales and attract more
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/multiple-product-labels-in-magento-2.png">
 </p>
 
-* **Create Product Labels for Separate Customer Groups**
+### Create Product Labels for Separate Customer Groups
 
 Different customers come to your store with different goals, same as you have something different to offer each of them. By personalizing your offer you make sure each customer finds products that suit their needs. 
 
