@@ -19,6 +19,14 @@ No need to handle product labels in Magento manually. Just set up the rules once
   * Magento Community 2.2.0-2.4.x (CE, EE, ECE, B2B)
   * [Magefan Community Extension](https://github.com/magefan/module-community) >= v2.1.14. Please install this extension first if you use installation via FTP.
   * **Note** that extension is free only for the Magento Community (Open Source) Edition. For Magento EE, ECE, B2B you need to purchase the license at magefan.com.
+
+## Editions & Pricing
+  
+<a href="https://magefan.com/magento-2-product-labels/pricing">
+          <img
+            src="https://cm.magefan.com/wysiwyg/products/magento-product-label-pricing.png"
+            alt="Plans and Pricing for Magento 2 Product Labels Extension" />
+        </a>
                 
 ## Benefits
 * Text-, shape- and image-based product labels in Magento
