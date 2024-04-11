@@ -1,4 +1,4 @@
-# [Magento 2 Product Label Free](https://magefan.com/magento-2-product-label) by Magefan
+# [Magento 2 Product Label Free](https://magefan.com/magento-2-product-labels) by Magefan
 
 [![Total Downloads](https://poser.pugx.org/magefan/module-product-label/downloads)](https://packagist.org/packages/magefan/module-product-label)
 [![Latest Stable Version](https://poser.pugx.org/magefan/module-product-label/v/stable)](https://packagist.org/packages/magefan/module-product-label)
