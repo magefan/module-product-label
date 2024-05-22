@@ -25,16 +25,24 @@ class ResultInterface
     protected $config;
 
     /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    private $request;
+
+    /**
      * @param Html $htmlParser
      * @param Config $config
      */
     public function __construct(
         Html $htmlParser,
-        Config $config
+        Config $config,
+        \Magento\Framework\App\RequestInterface $request,
     )
     {
         $this->htmlParser = $htmlParser;
         $this->config = $config;
+        $this->request = $request;
+
     }
 
     /**
@@ -49,8 +57,9 @@ class ResultInterface
         ResponseInterface $response
     ) {
         $html = $response->getBody();
-
-        if ($this->config->isEnabled() && (false !== strpos($html, Html::COMMENT_PREFIX))) {
+        if ($this->config->isEnabled() && (false !== strpos($html, Html::COMMENT_PREFIX))
+            && !in_array($this->request->getFullActionName(),$this->config->getExcludePageTypes()))
+        {
             $response->setBody($this->htmlParser->execute($html));
         }
 
