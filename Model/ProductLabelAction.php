@@ -153,12 +153,7 @@ class ProductLabelAction
         }
         
         if ($ruleCollection) {
-            if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
-                $connection->delete($tableName,
-                    ['product_id = ?' => (int)$params['product_id']]
-                );
-                $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
-            } else {
+            if (!$this->isRuleWilBeAppliedForSpecificProduct($params)) {
                 $select = $this->connection->select()
                     ->from($tableName);
 
@@ -167,8 +162,6 @@ class ProductLabelAction
                 foreach ($oldProductToRuleCollection as $value) {
                     $oldProductToRuleData[$value['rule_id'] . '_' . $value['product_id']] = $value['product_id'];
                 }
-
-                $connection->truncateTable($tableName);
             }
         }
 
@@ -179,14 +172,30 @@ class ProductLabelAction
                 $rule->setData('store_ids', $item->getStoreIds());
                 $rule->setData('apply_by', $item->getData('apply_by'));
 
+                $ruleId = $item->getId();
+
                 if (!$this->canApplyRule($rule, $params)) {
+                    // to prevent cache clean
+                    foreach ($oldProductToRuleData as $key => $value) {
+                        if (0 === strpos($key, $ruleId . '_')) {
+                            unset($oldProductToRuleData[$key]);
+                        }
+                    }
+
                     continue;
                 }
 
-                $productsIdsFromRule = $this->getListProductIds($rule, $params);
-
                 $data = [];
-                $ruleId = $item->getId();
+                $deleteCondition = ['rule_id = ?' => $ruleId];
+
+                if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
+                    $deleteCondition['product_id = ?'] = (int)$params['product_id'];
+                    $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
+                }
+
+                $connection->delete($tableName, $deleteCondition);
+
+                $productsIdsFromRule = $this->getListProductIds($rule, $params);
 
                 foreach ($productsIdsFromRule as $productId) {
                     $data[] = [
@@ -292,21 +301,21 @@ class ProductLabelAction
      */
     private function canApplyRule($rule, array $params = []): bool
     {
-        $result = true;
-
-        $applyBy = $rule->getData('apply_by');
-
-        if ($applyBy && !in_array(ApplyByOptions::ALL_EVENTS, $applyBy)) {
-            if (!empty($params['rule_apply_type'])) {
-                if (!in_array($params['rule_apply_type'], $applyBy))  {
-                    $result = false;
-                }
-            } elseif (!in_array(ApplyByOptions::MANUALLY, $applyBy)) {
-                $result = false;
-            }
+        if (ApplyByOptions::MANUALLY === $params['rule_apply_type']) {
+            return true;
         }
 
-        return $result;
+        $applyBy = (array)$rule->getData('apply_by');
+
+        if (in_array(ApplyByOptions::ALL_EVENTS, $applyBy)) {
+            return true;
+        }
+
+        if (!in_array($params['rule_apply_type'], $applyBy))  {
+            return false;
+        }
+
+        return true;
     }
 
     /**
