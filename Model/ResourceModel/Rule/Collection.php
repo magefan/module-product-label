@@ -76,6 +76,12 @@ class Collection extends \Magento\Framework\Model\ResourceModel\Db\Collection\Ab
                     }
                     $item->setData('_first_store_id', $storeId);
                     $item->setData('store_ids', $result[$ruleId]);
+                    
+                    if ($item->getData('apply_by')) {
+                        $item->setData('apply_by',
+                            explode(',', $item->getData('apply_by'))
+                        );
+                    }
                 }
             }
         }

@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magefan\ProductLabel\Controller\Adminhtml\Rule;
 
 use Magento\Framework\Controller\ResultFactory;
+use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
 
 /**
  * Class Apply
@@ -70,7 +71,14 @@ class Apply extends \Magento\Backend\App\Action
             }
 
             if ($this->config->isEnabled()) {
-                $this->productLabelAction->execute();
+                $params = [];
+                $params['rule_apply_type'] = ApplyByOptions::MANUALLY;
+                
+                if ($id = (int)$this->getRequest()->getParam('id')) {
+                    $params['rule_id'] = $id;
+                }
+
+                $this->productLabelAction->execute($params);
                 $this->messageManager->addSuccess(__('Rules has been applied.'));
             } else {
                 $this->messageManager->addNotice(__('Please enable the extension to apply rules.'));

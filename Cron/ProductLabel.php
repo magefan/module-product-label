@@ -7,6 +7,8 @@ declare(strict_types=1);
 
 namespace Magefan\ProductLabel\Cron;
 
+use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
+
 /**
  * Apply Product Label rules
  */
@@ -41,7 +43,7 @@ class ProductLabel
     public function execute(): void
     {
         if ($this->config->isEnabled()) {
-            $this->productLabelAction->execute();
+            $this->productLabelAction->execute(['rule_apply_type' => ApplyByOptions::CRON]);
         }
     }
 }

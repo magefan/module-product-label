@@ -17,6 +17,7 @@ use Magefan\Community\Model\Magento\Rule\Model\Condition\Sql\Builder as SqlBuild
 use Magefan\Community\Api\GetParentProductIdsInterface;
 use Magefan\Community\Api\GetWebsitesMapInterface;
 use Magento\Framework\Module\Manager as ModuleManager;
+use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
 
 /**
  * Class ProductLabelAction
@@ -57,7 +58,6 @@ class ProductLabelAction
      * @var \Magefan\ProductLabel\Model\Config
      */
     protected $config;
-
 
     /**
      * @var SqlBuilder
@@ -132,9 +132,9 @@ class ProductLabelAction
     }
 
     /**
-     * @return void
+     * @param array $params
      */
-    public function execute()
+    public function execute(array $params = [])
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('magefan_product_label_rule_product');
@@ -144,6 +144,13 @@ class ProductLabelAction
 
         $ruleCollection = $this->ruleCollectionFactory->create()
             ->addFieldToFilter('status', 1);
+
+        if (isset($params['rule_id'])) {
+            $ruleId = (int)$params['rule_id'];
+            if ($ruleId) {
+                $ruleCollection->addFieldToFilter('id', $ruleId);
+            }
+        }
 
         if ($ruleCollection) {
             $select = $this->connection->select()
@@ -163,6 +170,17 @@ class ProductLabelAction
                 $rule = $this->catalogRuleFactory->create();
                 $rule->setData('conditions_serialized', $conditionsSerialized);
                 $rule->setData('store_ids', $item->getStoreIds());
+                $rule->setData('apply_by', $item->getData('apply_by'));
+
+                if (!$this->canApplyRule($rule, $params)) {
+                    continue;
+                }
+
+
+                // need to realize logic for apply by product id
+                // need to realize logic for apply by product id
+                // need to realize logic for apply by product id
+                // need to realize logic for apply by product id
 
                 $productsIdsFromRule = $this->getListProductIds($rule);
 
@@ -259,5 +277,29 @@ class ProductLabelAction
         );
 
         return array_unique($this->productIds);
+    }
+
+    /**
+     * @param $rule
+     * @param array $params
+     * @return bool
+     */
+    private function canApplyRule($rule, array $params = []): bool
+    {
+        $result = true;
+
+        $applyBy = $rule->getData('apply_by');
+
+        if ($applyBy && !in_array(ApplyByOptions::ALL_EVENTS, $applyBy)) {
+            if (!empty($params['rule_apply_type'])) {
+                if (!in_array($params['rule_apply_type'], $applyBy))  {
+                    $result = false;
+                }
+            } elseif (!in_array(ApplyByOptions::MANUALLY, $applyBy)) {
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 }
