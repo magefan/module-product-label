@@ -56,10 +56,13 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                         planFeatures.forEach(selector => {
                             if (document.querySelector(selector)) {
                                 const element = document.querySelector(selector);
-                                element.addEventListener('click', function () {
+                                element.addEventListener('click', function (event) {
                                     if (versionsManager._currentPlan != plan) {
                                         versionsManager.showAlert(plan)
                                     }
+
+                                    event.preventDefault();
+                                    event.stopPropagation();
                                 });
 
                                 // Remove the selector from _selector
