@@ -27,6 +27,11 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                 '[name=discard_subsequent_rules]',
                 '[data-index="product_list"] [data-mf-type="1"]',
                 '[data-index="product_page"] [data-mf-type="1"]',
+                '[data-index="active_from"]',
+                '[data-index="active_to"]',
+                '[data-index="active_from"] button',
+                '[data-index="active_to"] button',
+                '[name="apply_by"]'
             ],
             <?php if ($currentPlan != 'Plus') { ?>
             'Plus': [
@@ -51,10 +56,13 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                         planFeatures.forEach(selector => {
                             if (document.querySelector(selector)) {
                                 const element = document.querySelector(selector);
-                                element.addEventListener('click', function () {
+                                element.addEventListener('click', function (event) {
                                     if (versionsManager._currentPlan != plan) {
                                         versionsManager.showAlert(plan)
                                     }
+
+                                    event.preventDefault();
+                                    event.stopPropagation();
                                 });
 
                                 // Remove the selector from _selector

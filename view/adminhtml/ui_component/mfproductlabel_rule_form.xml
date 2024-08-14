@@ -128,6 +128,25 @@
             </argument>
         </field>
 
+        <field name="apply_by" formElement="multiselect">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="default" xsi:type="string">2,3</item>
+                </item>
+            </argument>
+            <settings>
+                <label translate="true">Apply By (Extra)</label>
+                <dataScope>apply_by</dataScope>
+            </settings>
+            <formElements>
+                <multiselect>
+                    <settings>
+                        <options class="Magefan\ProductLabel\Model\Config\Source\ApplyByOptions"/>
+                    </settings>
+                </multiselect>
+            </formElements>
+        </field>
+
         <field name="customer_group_ids" formElement="multiselect">
             <argument name="data" xsi:type="array">
                 <item name="config" xsi:type="array">

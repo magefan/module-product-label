@@ -17,6 +17,7 @@ use Magefan\Community\Model\Magento\Rule\Model\Condition\Sql\Builder as SqlBuild
 use Magefan\Community\Api\GetParentProductIdsInterface;
 use Magefan\Community\Api\GetWebsitesMapInterface;
 use Magento\Framework\Module\Manager as ModuleManager;
+use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
 
 /**
  * Class ProductLabelAction
@@ -57,7 +58,6 @@ class ProductLabelAction
      * @var \Magefan\ProductLabel\Model\Config
      */
     protected $config;
-
 
     /**
      * @var SqlBuilder
@@ -132,9 +132,9 @@ class ProductLabelAction
     }
 
     /**
-     * @return void
+     * @param array $params
      */
-    public function execute()
+    public function execute(array $params = [])
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('magefan_product_label_rule_product');
@@ -145,17 +145,24 @@ class ProductLabelAction
         $ruleCollection = $this->ruleCollectionFactory->create()
             ->addFieldToFilter('status', 1);
 
-        if ($ruleCollection) {
-            $select = $this->connection->select()
-                ->from($tableName);
-
-            $oldProductToRuleCollection = $this->connection->fetchAll($select);
-
-            foreach ($oldProductToRuleCollection as $value) {
-                $oldProductToRuleData[$value['rule_id'] . '_' . $value['product_id']] = $value['product_id'];
+        if (isset($params['rule_id'])) {
+            $ruleId = (int)$params['rule_id'];
+            if ($ruleId) {
+                $ruleCollection->addFieldToFilter('id', $ruleId);
             }
+        }
+        
+        if ($ruleCollection) {
+            if (!$this->isRuleWilBeAppliedForSpecificProduct($params)) {
+                $select = $this->connection->select()
+                    ->from($tableName);
 
-            $connection->truncateTable($tableName);
+                $oldProductToRuleCollection = $this->connection->fetchAll($select);
+
+                foreach ($oldProductToRuleCollection as $value) {
+                    $oldProductToRuleData[$value['rule_id'] . '_' . $value['product_id']] = $value['product_id'];
+                }
+            }
         }
 
         foreach ($ruleCollection as $item) {
@@ -163,11 +170,32 @@ class ProductLabelAction
                 $rule = $this->catalogRuleFactory->create();
                 $rule->setData('conditions_serialized', $conditionsSerialized);
                 $rule->setData('store_ids', $item->getStoreIds());
+                $rule->setData('apply_by', $item->getData('apply_by'));
 
-                $productsIdsFromRule = $this->getListProductIds($rule);
+                $ruleId = $item->getId();
+
+                if (!$this->canApplyRule($rule, $params)) {
+                    // to prevent cache clean
+                    foreach ($oldProductToRuleData as $key => $value) {
+                        if (0 === strpos($key, $ruleId . '_')) {
+                            unset($oldProductToRuleData[$key]);
+                        }
+                    }
+
+                    continue;
+                }
 
                 $data = [];
-                $ruleId = $item->getId();
+                $deleteCondition = ['rule_id = ?' => $ruleId];
+
+                if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
+                    $deleteCondition['product_id = ?'] = (int)$params['product_id'];
+                    $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
+                }
+
+                $connection->delete($tableName, $deleteCondition);
+
+                $productsIdsFromRule = $this->getListProductIds($rule, $params);
 
                 foreach ($productsIdsFromRule as $productId) {
                     $data[] = [
@@ -199,10 +227,10 @@ class ProductLabelAction
 
     /**
      * @param $rule
-     * @param null $params
+     * @param array $params
      * @return array
      */
-    public function getListProductIds($rule)
+    public function getListProductIds($rule, array $params = []): array
     {
         $this->productIds = [];
         $conditions = $rule->getConditions();
@@ -236,6 +264,11 @@ class ProductLabelAction
                     $productCollection->setStoreId($storeId);
                 }
 
+                if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
+                    $productCollection
+                        ->addFieldToFilter('entity_id', $params['product_id']);
+                }
+
                 $conditions = $rule->getConditions();
 
                 $conditions->collectValidatedAttributes($productCollection);
@@ -259,5 +292,38 @@ class ProductLabelAction
         );
 
         return array_unique($this->productIds);
+    }
+
+    /**
+     * @param $rule
+     * @param array $params
+     * @return bool
+     */
+    private function canApplyRule($rule, array $params = []): bool
+    {
+        if (ApplyByOptions::MANUALLY === $params['rule_apply_type']) {
+            return true;
+        }
+
+        $applyBy = (array)$rule->getData('apply_by');
+
+        if (in_array(ApplyByOptions::ALL_EVENTS, $applyBy)) {
+            return true;
+        }
+
+        if (!in_array($params['rule_apply_type'], $applyBy))  {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $params
+     * @return bool
+     */
+    protected function isRuleWilBeAppliedForSpecificProduct(array $params): bool 
+    {
+        return $params && isset($params['rule_apply_type']) && ($params['rule_apply_type'] == ApplyByOptions::ON_PRODUCT_SAVE);
     }
 }

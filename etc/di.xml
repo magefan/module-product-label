@@ -25,4 +25,14 @@
     <preference for="Magefan\ProductLabel\Api\RuleResourceModelInterface" type="Magefan\ProductLabel\Model\ResourceModel\Rule"/>
     <preference for="Magefan\ProductLabel\Api\Data\RuleSearchResultsInterface" type="Magento\Framework\Api\SearchResults"/>
     <preference for="Magefan\ProductLabel\Api\PositionsInterface" type="Magefan\ProductLabel\Model\Config\Source\Positions"/>
+
+
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="Magefan_ProductLabel_ProductLabel" xsi:type="object">Magefan\ProductLabel\Console\Command\ProductLabel</item>
+            </argument>
+        </arguments>
+    </type>
+
 </config>

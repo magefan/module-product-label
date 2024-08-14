@@ -21,7 +21,7 @@ class Save extends Rule
     protected function _afterAction()
     {
         if ($this->getRequest()->getParam('auto_apply')) {
-            $this->_redirect('*/*/apply');
+            $this->_redirect('*/*/apply', [$this->_idKey => $this->getRequest()->getParam($this->_idKey)]);
         }
     }
 
@@ -51,7 +51,7 @@ class Save extends Rule
             $rule->beforeSave();
 
             if (!$this->getRequest()->getParam('auto_apply') && $rule->getConditionsSerialized() != $model->getConditionsSerialized()) {
-                $applyRulesLink = $this->getUrl('*/*/apply');
+                $applyRulesLink = $this->getUrl('*/*/apply', [$this->_idKey => $this->getRequest()->getParam($this->_idKey)]);
 
                 $this->messageManager->addNotice(
                     __('You have modified product conditions, to apply new conditions <a href="%1" >click here</a>', $applyRulesLink)
