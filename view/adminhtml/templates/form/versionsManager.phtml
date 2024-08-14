@@ -27,6 +27,10 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                 '[name=discard_subsequent_rules]',
                 '[data-index="product_list"] [data-mf-type="1"]',
                 '[data-index="product_page"] [data-mf-type="1"]',
+                '[data-index="active_from"]',
+                '[data-index="active_to"]',
+                '[data-index="active_from"] button',
+                '[data-index="active_to"] button'
             ],
             <?php if ($currentPlan != 'Plus') { ?>
             'Plus': [
