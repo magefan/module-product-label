@@ -30,7 +30,8 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                 '[data-index="active_from"]',
                 '[data-index="active_to"]',
                 '[data-index="active_from"] button',
-                '[data-index="active_to"] button'
+                '[data-index="active_to"] button',
+                '[name="apply_by"]'
             ],
             <?php if ($currentPlan != 'Plus') { ?>
             'Plus': [
@@ -41,8 +42,7 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
                 '[data-index="preview_button"]',
                 '[data-index="hide_preview_button"]',
                 '[data-index="position"]',
-                '[data-index="pp_position"]',
-                '[name="apply_by"]'
+                '[data-index="pp_position"]'
             ]
             <?php } ?>
         },

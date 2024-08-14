@@ -135,7 +135,7 @@
                 </item>
             </argument>
             <settings>
-                <label translate="true">Apply By (Plus)</label>
+                <label translate="true">Apply By (Extra)</label>
                 <dataScope>apply_by</dataScope>
             </settings>
             <formElements>
