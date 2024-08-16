@@ -36,9 +36,8 @@ class ResultInterface
     public function __construct(
         Html $htmlParser,
         Config $config,
-        \Magento\Framework\App\RequestInterface $request,
-    )
-    {
+        \Magento\Framework\App\RequestInterface $request
+    ) {
         $this->htmlParser = $htmlParser;
         $this->config = $config;
         $this->request = $request;
