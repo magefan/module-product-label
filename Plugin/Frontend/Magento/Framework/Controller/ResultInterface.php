@@ -57,9 +57,12 @@ class ResultInterface
         ResponseInterface $response
     ) {
         $html = $response->getBody();
-        if ($this->config->isEnabled() && (false !== strpos($html, Html::COMMENT_PREFIX))
-            && !in_array($this->request->getFullActionName(),$this->config->getExcludePageTypes()))
-        {
+
+        if (
+            $this->config->isEnabled()
+            && !in_array($this->request->getFullActionName(), $this->config->getExcludePageTypes())
+            && (false !== strpos($html, Html::COMMENT_PREFIX))
+        ) {
             $response->setBody($this->htmlParser->execute($html));
         }
 

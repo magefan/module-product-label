@@ -34,6 +34,7 @@ class Config
     const XML_PATH_GENERAL_LIST_PAGE_CONTAINER_SELECTOR = 'mfproductlabel/general/pl_selector';
 
     const XML_PATH_EXCLUDE_PAGE_TYPES = 'mfproductlabel/general/exclude_page_types';
+
     /**
      * Config constructor.
      * @param ScopeConfigInterface $scopeConfig
@@ -89,9 +90,13 @@ class Config
         );
     }
 
+    /**
+     * @return array
+     */
     public function getExcludePageTypes(): array
     {
-        $pageTypes = $this->scopeConfig->getValue(self::XML_PATH_EXCLUDE_PAGE_TYPES);
+        $pageTypes = (string)$this->scopeConfig->getValue(self::XML_PATH_EXCLUDE_PAGE_TYPES);
+
         return explode(',', $pageTypes);
     }
 

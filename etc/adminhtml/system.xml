@@ -35,10 +35,10 @@
                     <label>Product List Label Container</label>
                     <comment>Only one class that located above the product image!</comment>
                 </field>
-                <field id="exclude_page_types" translate="label" type="multiselect" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
-                    <label>Dont Use On Page</label>
-                    <backend_model>Magefan\ProductLabel\Model\Config\Backend\ExcludePageType</backend_model>
+                <field id="exclude_page_types" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Don't Use On Pages</label>
                     <source_model>Magefan\ProductLabel\Model\Config\Source\PageType</source_model>
+                    <can_be_empty>1</can_be_empty>
                 </field>
             </group>
         </section>
