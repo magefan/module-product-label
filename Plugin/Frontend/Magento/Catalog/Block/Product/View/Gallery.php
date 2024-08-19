@@ -36,7 +36,7 @@ class Gallery
     {
         if ($this->config->isEnabled()
             && ($product = $subject->getProduct())
-            && (false !== strpos($result, 'gallery-placeholder__image')))
+            /*&& (false !== strpos($result, 'gallery-placeholder__image'))*/)
         {
            $result = $result . Html::COMMENT_PREFIX . $product->getId() . Html::COMMENT_SUFFIX;
         }
