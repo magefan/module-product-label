@@ -5,18 +5,28 @@
  */
 ?>
 <?php
-/** @var $block \Magefan\ProductLabel\Block\LabelCss */
+/**
+ * @var $block \Magefan\ProductLabel\Block\LabelCss
+ * @var $mfSecureRenderer \Magefan\Community\Api\SecureHtmlRendererInterface
+ * @var $mfHyvaThemeDetection \Magefan\Community\Api\HyvaThemeDetectionInterface
+ * @var $escaper \Magento\Framework\Escaper
+ */
 ?>
 
-<style>
-    .fotorama .mf-label-position-custom {display: none;}
-    .product.media > .mf-label-container {display: none;}
-</style>
+<?php if (!$mfHyvaThemeDetection->execute()) { ?>
+    <style>
+        .fotorama .mf-label-position-custom {display: none;}
+        .product.media > .mf-label-container {display: none;}
+    </style>
 
-<script type="text/javascript">
+    <?php $script = "
     require(['jquery'], function ($) {
         $('[data-gallery-role=gallery-placeholder]').on('gallery:loaded', function () {
-            $(this).parent().find('.mf-label-container').prependTo('<?= $escaper->escapeHtml($block->getConfig()->getProductPageContainerSelector()) ?>')
+            $(this).parent().find('.mf-label-container').prependTo('" . $escaper->escapeHtml($block->getConfig()->getProductPageContainerSelector()) . "')
         });
     });
-</script>
+   "; ?>
+
+    <?= /* @noEscape */ $mfSecureRenderer->renderTag('script', [], $script, false) ?>
+
+<?php } ?>
