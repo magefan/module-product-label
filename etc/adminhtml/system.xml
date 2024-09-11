@@ -28,12 +28,18 @@
 
                 <field id="pp_selector" translate="css class parent label container" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product Page Label Container</label>
-                    <comment>Selector for Container [For Hyva use: "relative self-center w-full"]</comment>
+                    <comment><![CDATA[
+                        Selector for Container <span class="hyva">[For Hyva Theme use: "relative self-center w-full"]</span>
+                       ]]>
+                    </comment>
                 </field>
 
                 <field id="pl_selector" translate="css class parent label container" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product List Label Container</label>
-                    <comment>Only one class that located above the product image! [For Hyva use: "product-image-photo"]</comment>
+                    <comment><![CDATA[
+                        Only one class that located above the product image! <span class="hyva">[For Hyva Theme use: "product-image-photo"]</span>
+                        ]]>
+                    </comment>
                 </field>
                 <field id="exclude_page_types" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Don't Use On Pages</label>
