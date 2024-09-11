@@ -3,10 +3,14 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
+
+/**
+ * @var $mfSecureRenderer \Magefan\Community\Api\SecureHtmlRendererInterface
+ */
 ?>
 
-<script type="text/javascript">
-    var checkbox = document.querySelector('[data-index="use_the_same_label_for_product_page"] input[type="checkbox"]');
+<?php $script = "
+    var checkbox = document.querySelector('[data-index=\"use_the_same_label_for_product_page\"] input[type=\"checkbox\"]');
 
     function toggleClassForUseTheSameLabelForProductPage() {
 
@@ -19,4 +23,6 @@
 
     checkbox.addEventListener('click', toggleClassForUseTheSameLabelForProductPage);
     toggleClassForUseTheSameLabelForProductPage();
-</script>
+   "; ?>
+
+<?= /* @noEscape */ $mfSecureRenderer->renderTag('script', [], $script, false) ?>

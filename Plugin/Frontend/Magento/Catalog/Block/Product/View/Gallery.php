@@ -10,6 +10,7 @@ namespace Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\Vie
 
 use Magefan\ProductLabel\Model\Config;
 use Magefan\ProductLabel\Model\Parser\Html;
+use Magefan\Community\Api\HyvaThemeDetectionInterface;
 
 class Gallery
 {
@@ -19,12 +20,20 @@ class Gallery
     protected $config;
 
     /**
+     * @var HyvaThemeDetectionInterface
+     */
+    protected $hyvaThemeDetection;
+
+    /**
      * @param Config $config
+     * @param HyvaThemeDetectionInterface $hyvaThemeDetection
      */
     public function __construct(
-        Config $config
+        Config $config,
+        HyvaThemeDetectionInterface $hyvaThemeDetection
     ) {
         $this->config = $config;
+        $this->hyvaThemeDetection = $hyvaThemeDetection;
     }
 
     /**
@@ -34,13 +43,44 @@ class Gallery
      */
     public function afterToHtml($subject, $result)
     {
-        if ($this->config->isEnabled()
-            && ($product = $subject->getProduct())
-            && (false !== strpos($result, 'gallery-placeholder__image')))
-        {
-           $result = $result . Html::COMMENT_PREFIX . $product->getId() . Html::COMMENT_SUFFIX;
+        if ($this->config->isEnabled() && ($product = $subject->getProduct())) {
+            $mfPlComment = Html::COMMENT_PREFIX . $product->getId() . Html::COMMENT_SUFFIX;
+
+            if ($this->hyvaThemeDetection->execute()) {
+                $result = $this->addMfLabelContainerToImageWrapperTag($result, (int)$product->getId());
+            } else {
+                $result = $result . $mfPlComment;
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * @param string $html
+     * @param int $productId
+     * @return string
+     */
+    private function addMfLabelContainerToImageWrapperTag(string $html, int $productId): string
+    {
+        $wrapperClass = ltrim($this->config->getProductPageContainerSelector(), '.');
+
+        $imgTagPosition = strpos($html, '<img');
+
+        if ($imgTagPosition !== false) {
+            $wrapperClassPosition = strpos($html, $wrapperClass);
+
+            if ($wrapperClassPosition !== false) {
+                $endOfTagWithWrapperClassPosition = strpos($html, '>', $wrapperClassPosition);
+
+                if ($endOfTagWithWrapperClassPosition !== false) {
+                    $mfPlContainer = Html::COMMENT_PREFIX . $productId . Html::COMMENT_SUFFIX;
+
+                    $html = substr_replace($html, $mfPlContainer, $endOfTagWithWrapperClassPosition + 1, 0);
+                }
+            }
+        }
+
+        return $html;
     }
 }

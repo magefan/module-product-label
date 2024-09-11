@@ -3,6 +3,10 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
+
+/**
+ * @var $mfSecureRenderer \Magefan\Community\Api\SecureHtmlRendererInterface
+ */
 ?>
 
 <?php
@@ -18,33 +22,38 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
 }
 ?>
 
-<script type="text/javascript">
-    var versionsManager = {
-        _currentPlan: '<?= /*@noEscape*/ $currentPlan ?>',
+
+<?php $script = "
+   var versionsManager = {
+        _currentPlan: '" . $currentPlan . "',
         _selector: {
             'Extra': [
-                '[name="customer_group_ids"]',
+                '[name=\"customer_group_ids\"]',
                 '[name=discard_subsequent_rules]',
-                '[data-index="product_list"] [data-mf-type="1"]',
-                '[data-index="product_page"] [data-mf-type="1"]',
-                '[data-index="active_from"]',
-                '[data-index="active_to"]',
-                '[data-index="active_from"] button',
-                '[data-index="active_to"] button',
-                '[name="apply_by"]'
-            ],
-            <?php if ($currentPlan != 'Plus') { ?>
-            'Plus': [
-                '.show-attr-list',
-                '[data-index="product_list"] [data-mf-type="2"]',
-                '[data-index="product_page"] [data-mf-type="2"]',
-                '[name="use_the_same_label_for_product_page"]',
-                '[data-index="preview_button"]',
-                '[data-index="hide_preview_button"]',
-                '[data-index="position"]',
-                '[data-index="pp_position"]'
-            ]
-            <?php } ?>
+                '[data-index=\"product_list\"] [data-mf-type=\"1\"]',
+                '[data-index=\"product_page\"] [data-mf-type=\"1\"]',
+                '[data-index=\"active_from\"]',
+                '[data-index=\"active_to\"]',
+                '[data-index=\"active_from\"] button',
+                '[data-index=\"active_to\"] button',
+                '[name=\"apply_by\"]'
+            ],";
+
+            if ($currentPlan != 'Plus') {
+                $script .= "
+                'Plus': [
+                    '.show-attr-list',
+                    '[data-index=\"product_list\"] [data-mf-type=\"2\"]',
+                    '[data-index=\"product_page\"] [data-mf-type=\"2\"]',
+                    '[name=\"use_the_same_label_for_product_page\"]',
+                    '[data-index=\"preview_button\"]',
+                    '[data-index=\"hide_preview_button\"]',
+                    '[data-index=\"position\"]',
+                    '[data-index=\"pp_position\"]'
+                ]";
+            }
+
+        $script .= "
         },
 
         initListener: function () {
@@ -78,15 +87,15 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
         },
 
         showAlert: function (extensionPlan) {
-            require(["jquery", "Magento_Ui/js/modal/alert"], function($, alert) {
+            require(['jquery', 'Magento_Ui/js/modal/alert'], function($, alert) {
                 alert({
-                    title: "You cannot use this option.",
-                    content: "This feature is available in <strong>" + extensionPlan + "</strong> plan only.",
+                    title: 'You cannot use this option.',
+                    content: 'This feature is available in <strong>' + extensionPlan + '</strong> plan only.',
                     buttons: [{
-                        text: "Upgrade Plan Now",
-                        class: "action primary accept",
+                        text: 'Upgrade Plan Now',
+                        class: 'action primary accept',
                         click: function () {
-                            window.open("https://magefan.com");
+                            window.open('https://magefan.com');
                         }
                     }]
                 });
@@ -95,5 +104,6 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
     };
 
     versionsManager.initListener();
+   "; ?>
 
-</script>
+<?= /* @noEscape */ $mfSecureRenderer->renderTag('script', [], $script, false) ?>

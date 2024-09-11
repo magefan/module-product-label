@@ -12,12 +12,12 @@
             <label>Product Label</label>
             <tab>magefan</tab>
             <resource>Magefan_ProductLabel::mfproductlabel</resource>
-            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>General Configuration</label>
                 <field id="version" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <frontend_model>Magefan\ProductLabel\Block\Adminhtml\System\Config\Form\Info</frontend_model>
                 </field>
-                <field id="enabled" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="0" showInStore="0">
+                <field id="enabled" translate="label" type="select" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable Extension</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
@@ -28,12 +28,18 @@
 
                 <field id="pp_selector" translate="css class parent label container" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product Page Label Container</label>
-                    <comment>Selector for Container</comment>
+                    <comment><![CDATA[
+                        Selector for Container <span class="hyva">[For Hyva Theme use: "relative self-center w-full"]</span>
+                       ]]>
+                    </comment>
                 </field>
 
                 <field id="pl_selector" translate="css class parent label container" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product List Label Container</label>
-                    <comment>Only one class that located above the product image!</comment>
+                    <comment><![CDATA[
+                        Only one class that located above the product image! <span class="hyva">[For Hyva Theme use: "product-image-photo"]</span>
+                        ]]>
+                    </comment>
                 </field>
                 <field id="exclude_page_types" translate="label" type="multiselect" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Don't Use On Pages</label>

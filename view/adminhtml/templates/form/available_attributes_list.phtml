@@ -3,6 +3,12 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
+
+/**
+ * @var $block \Magefan\ProductLabel\Block\Adminhtml\Rule\Edit\AvailableAttributes
+ * @var $escaper \Magento\Framework\Escaper
+ * @var $mfSecureRenderer \Magefan\Community\Api\SecureHtmlRendererInterface
+ */
 ?>
 
 <div id="search-for-attributes" style="display: none; width: 0px;">
@@ -30,30 +36,32 @@
     <button class="openbtn show-attr-list" onclick="openNav()">☰ <?=$escaper->escapeHtml(__('Attributes List')) ?></button>
 </div>
 
-<script type="text/javascript">
+<?php $script = "
     function filterItems()
     {
-        var filterValue = document.getElementById("attribute-input").value.toUpperCase();
+        var filterValue = document.getElementById('attribute-input').value.toUpperCase();
 
-        document.querySelectorAll("#attributes-list li").forEach((el, i) => {
+        document.querySelectorAll('#attributes-list li').forEach((el, i) => {
             el.style.display = (el.innerText.toUpperCase().includes(filterValue)) ? '' : 'none';
         });
     }
 
     function openNav()
     {
-        let el = document.getElementById("search-for-attributes");
-        el.style.width = "350px";
-        el.style.display = "";
+        let el = document.getElementById('search-for-attributes');
+        el.style.width = '350px';
+        el.style.display = '';
     }
 
     function closeNav()
     {
-        let el = document.getElementById("search-for-attributes");
-        el.style.width = "0";
-        el.style.display = "none";
+        let el = document.getElementById('search-for-attributes');
+        el.style.width = '0';
+        el.style.display = 'none';
     }
-</script>
+   "; ?>
+
+<?= /* @noEscape */ $mfSecureRenderer->renderTag('script', [], $script, false) ?>
 
 <style>
     #search-for-attributes {
