@@ -162,6 +162,7 @@ The code is licensed under [EULA](https://magefan.com/end-user-license-agreement
 
 ### [Magento 2 Marketing Automation Extensions](https://magefan.com/magento-2-extensions/magento-marketing-automation)
 
+  * [Magento 2 Cookie Consent](https://magefan.com/magento-2-cookie-consent)
   * [Magento 2 Base Price](https://magefan.com/magento-2-base-price)
   * [Magento 2 Dynamic Categories](https://magefan.com/magento-2-dynamic-categories)
   * [Magento 2 Dynamic Blocks and Pages Extension](https://magefan.com/magento-2-cms-display-rules-extension)
