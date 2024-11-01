@@ -94,8 +94,8 @@ class Html
      */
     public function execute(string $output): string
     {
-        $isOutputIsJson = (strpos($output, '{"') === 0 && strrpos($output, '"}') === strlen($output) - 2);
-
+        $isOutputIsJson = $this->json_validate($output);
+        
         $productIds = $this->getProductIds($output);
         [$ruleIds, $productIdRuleIds] = $this->getProductIdsToRuleIdsMap->execute($productIds);
 
@@ -186,5 +186,21 @@ class Html
         }
 
         return $productIds;
+    }
+
+    private function json_validate($json, $depth = 512, $flags = 0) 
+    {
+        // First character check to ensure the string starts with `{` or `[` (to improve perfrormace)
+        $trimmedJson = ltrim($json);
+        if (!is_string($json) || ($trimmedJson[0] !== '{' && $trimmedJson[0] !== '[')) {
+            return false;
+        }
+
+        try {
+            json_decode($json, false, $depth, $flags | JSON_THROW_ON_ERROR);
+            return true;
+        } catch (\JsonException $e) {
+            return false;
+        }
     }
 }
