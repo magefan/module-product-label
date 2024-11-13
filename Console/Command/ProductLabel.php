@@ -10,6 +10,10 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
+use Magento\Framework\Escaper;
+use Magento\Framework\App\State;
+use Magento\Framework\App\Area;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class ProductLabel
@@ -27,18 +31,34 @@ class ProductLabel extends Command
     protected $productLabelAction;
 
     /**
+     * @var Escaper
+     */
+    private $escaper;
+
+    /**
+     * @var State
+     */
+    private $state;
+
+    /**
      * ProductLabel constructor.
      * @param \Magefan\ProductLabel\Model\ProductLabelAction $productLabelAction
      * @param \Magefan\ProductLabel\Model\Config $config
+     * @param Escaper $escaper
+     * @param State $state
      * @param null $name
      */
     public function __construct(
         \Magefan\ProductLabel\Model\ProductLabelAction $productLabelAction,
         \Magefan\ProductLabel\Model\Config $config,
+        Escaper $escaper,
+        State $state,
         $name = null
     ) {
         $this->config = $config;
         $this->productLabelAction = $productLabelAction;
+        $this->escaper = $escaper;
+        $this->state = $state;
         parent::__construct($name);
     }
 
@@ -51,6 +71,12 @@ class ProductLabel extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         if ($this->config->isEnabled()) {
+            try {
+                $this->state->setAreaCode(Area::AREA_GLOBAL);
+            } catch (LocalizedException $e) {
+                $output->writeln((string)__('Something went wrong. %1', $this->escaper->escapeHtml($e->getMessage())));
+            }
+
             $this->productLabelAction->execute(['rule_apply_type' => ApplyByOptions::MANUALLY]);
             $output->writeln(__("Product Label rules have been applied."));
         } else {
