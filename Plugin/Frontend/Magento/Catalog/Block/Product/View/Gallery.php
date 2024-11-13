@@ -49,7 +49,9 @@ class Gallery
             if ($this->hyvaThemeDetection->execute()) {
                 $result = $this->addMfLabelContainerToImageWrapperTag($result, (int)$product->getId());
             } else {
-                $result = $result . $mfPlComment;
+                if (strpos($result, '<img') !== false) {
+                      $result = $result . $mfPlComment;
+                }
             }
         }
 
