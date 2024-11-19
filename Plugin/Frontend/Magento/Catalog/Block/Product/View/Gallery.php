@@ -44,7 +44,7 @@ class Gallery
     public function afterToHtml($subject, $result)
     {
         if ($this->config->isEnabled() && ($product = $subject->getProduct())) {
-            $mfPlComment = Html::COMMENT_PREFIX . $product->getId() . Html::COMMENT_SUFFIX;
+            $mfPlComment = Html::COMMENT_PREFIX_GALLERY . $product->getId() . Html::COMMENT_SUFFIX;
 
             if ($this->hyvaThemeDetection->execute()) {
                 $result = $this->addMfLabelContainerToImageWrapperTag($result, (int)$product->getId());
@@ -76,7 +76,7 @@ class Gallery
                 $endOfTagWithWrapperClassPosition = strpos($html, '>', $wrapperClassPosition);
 
                 if ($endOfTagWithWrapperClassPosition !== false) {
-                    $mfPlContainer = Html::COMMENT_PREFIX . $productId . Html::COMMENT_SUFFIX;
+                    $mfPlContainer = Html::COMMENT_PREFIX_GALLERY . $productId . Html::COMMENT_SUFFIX;
 
                     $html = substr_replace($html, $mfPlContainer, $endOfTagWithWrapperClassPosition + 1, 0);
                 }

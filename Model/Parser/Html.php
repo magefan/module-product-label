@@ -19,6 +19,7 @@ use Magefan\ProductLabel\Api\LabelProcessorInterface;
 class Html
 {
     const COMMENT_PREFIX = '<!--mf_product_label_comment_';
+    const COMMENT_PREFIX_GALLERY = '<!--mf_product_label_gallery_comment_';
 
     const COMMENT_SUFFIX = '-->';
 
@@ -95,8 +96,14 @@ class Html
     public function execute(string $output): string
     {
         $isOutputIsJson = $this->json_validate($output);
-        
+
         $productIds = $this->getProductIds($output);
+        $currentPageProductId = $this->fan == 'catalog_product_view' ? $this->getCurrentPageProductId($output) : 0;
+
+        if ($currentPageProductId) {
+            $productIds[] = $currentPageProductId;
+        }
+
         [$ruleIds, $productIdRuleIds] = $this->getProductIdsToRuleIdsMap->execute($productIds);
 
         $rules = $this->ruleCollectionFactory->create()
@@ -108,7 +115,9 @@ class Html
         $replaceMap = [];
 
         foreach ($productIdRuleIds as $productId => $productRuleIds) {
-            $productLabels = $this->getProductLabels($rules, $productRuleIds);
+            $forProductPage = $currentPageProductId && $productId == $currentPageProductId;
+
+            $productLabels = $this->getProductLabels($rules, $productRuleIds, $forProductPage);
 
             $htmlToReplace = $this->layout
                 ->createBlock(\Magefan\ProductLabel\Block\Label::class)
@@ -126,16 +135,17 @@ class Html
 
         foreach ($replaceMap as $productId => $replace) {
             $replace = $isOutputIsJson ? trim(json_encode($replace),'"') : $replace;
-            $output = str_replace(self::COMMENT_PREFIX . $productId . self::COMMENT_SUFFIX, $replace, $output);
+
+            $output = ($currentPageProductId && $currentPageProductId == $productId)
+                ? str_replace(self::COMMENT_PREFIX_GALLERY . $productId . self::COMMENT_SUFFIX, $replace, $output)
+                : str_replace(self::COMMENT_PREFIX         . $productId . self::COMMENT_SUFFIX, $replace, $output);
         }
 
         return $output;
     }
 
-    public function getProductLabels($rules, $productRuleIds): array
+    public function getProductLabels($rules, $productRuleIds, $forProductPage = false): array
     {
-        $forProductPage = $this->fan == 'catalog_product_view';
-
         $productLabelsCount = 0;
         $productLabels = [];
 
@@ -170,6 +180,27 @@ class Html
 
     /**
      * @param string $html
+     * @return int
+     */
+    private function getCurrentPageProductId(string $html): int
+    {
+        $pattern = '/' . self::COMMENT_PREFIX_GALLERY . '(.*?)' . self::COMMENT_SUFFIX . '/';
+        preg_match_all($pattern, $html, $matches);
+
+
+        foreach ($matches[1] as $commentData) {
+            $productId = (int)$commentData;
+
+            if ($productId) {
+                return $productId;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
+     * @param string $html
      * @return array
      */
     private function getProductIds(string $html): array
@@ -187,8 +218,8 @@ class Html
 
         return $productIds;
     }
-    
-    private function json_validate($json, $depth = 512, $flags = 0) 
+
+    private function json_validate($json, $depth = 512, $flags = 0)
     {
         if (!is_string($json)) {
             return false;
@@ -199,7 +230,7 @@ class Html
         if ($trimmedJson[0] !== '{' && $trimmedJson[0] !== '[') {
             return false;
         }
-    
+
         // Decode JSON and check for errors
         json_decode($json, false, $depth, $flags);
         return json_last_error() === JSON_ERROR_NONE;
