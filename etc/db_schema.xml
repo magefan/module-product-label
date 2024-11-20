@@ -13,7 +13,8 @@
         <column xsi:type="int"      name="id" identity="true"   unsigned="false" nullable="false" padding="10" comment="ID"/>
         <column xsi:type="smallint" name="status"               nullable="false" default="1" comment="Status"/>
         <column xsi:type="varchar"  name="name"                          nullable="false" comment="Name"/>
-        <column xsi:type="int"      name="priority"             comment="CrossLink Priority"/>
+        <column xsi:type="int"      name="priority"             comment="Priority"/>
+        <column xsi:type="int"      name="display_on_parent"      comment="Display the child product's label on the parent product (for configurable and grouped products only)."  nullable="false" default="0"/>
         <column xsi:type="text"     name="image" comment="Image"/>
         <column xsi:type="text"     name="image_alt" comment="List Page Image alt"/>
         <column xsi:type="text"     name="conditions_serialized" comment="Conditions Serialized"/>

@@ -60,7 +60,10 @@ class ResultInterface
         if (
             $this->config->isEnabled()
             && !in_array($this->request->getFullActionName(), $this->config->getExcludePageTypes())
-            && (false !== strpos($html, Html::COMMENT_PREFIX))
+            && (
+                false !== strpos($html, Html::COMMENT_PREFIX) ||
+                false !== strpos($html, Html::COMMENT_PREFIX_GALLERY)
+            )
         ) {
             $response->setBody($this->htmlParser->execute($html));
         }

@@ -286,10 +286,12 @@ class ProductLabelAction
             }
         }
 
-        $this->productIds = array_merge(
-            $this->productIds,
-            $this->getParentProductIds->execute($this->productIds)
-        );
+        if ($rule->getDisplayOnParent()) {
+            $this->productIds = array_merge(
+                $this->productIds,
+                $this->getParentProductIds->execute($this->productIds)
+            );
+        }
 
         return array_unique($this->productIds);
     }
