@@ -4,45 +4,40 @@
  */
 
 var MagefanPL = {
-    processConfigurableProductLabel: function (lableEl, maintProductID, selectedProductId) {
+    processConfigurableProductLabel: function (labelEl, maintProductID, selectedProductId, forProductPage = 0) {
         var self = this;
-        console.log({maintProductID})
-        console.log({selectedProductId})
-
 
         if (!window.mfLabelProcessed) {
             window.mfLabelProcessed = {};
         }
 
         if (!window.mfLabelProcessed[maintProductID]) {
-            let url = BASE_URL + 'mfpl/label/get?product_ids=' + maintProductID + '&get_children=1&product_page=' +  (this.inProductList ? '0' : '1');
+            const url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
 
             MagefanJs.ajax({'url':url, 'type': 'GET',
                 success:  function(response) {
                     response = JSON.parse(response)
-                    console.log(response);
                     window.mfLabelProcessed[maintProductID] = response.labels;
-                    self.replaceLabel(lableEl, maintProductID, selectedProductId)
+                    self.replaceLabel(labelEl, maintProductID, selectedProductId)
                 }
             });
         } else {
-            self.replaceLabel(lableEl, maintProductID, selectedProductId)
+            self.replaceLabel(labelEl, maintProductID, selectedProductId)
         }
     },
 
-    replaceLabel: function (lableEl, maintProductID, selectedProductId) {
+    replaceLabel: function (labelEl, maintProductID, selectedProductId) {
 
         let labelHtml =  window.mfLabelProcessed[maintProductID] && window.mfLabelProcessed[maintProductID][selectedProductId]
             ? window.mfLabelProcessed[maintProductID][selectedProductId] : '';
-        console.log(labelHtml);
 
         if (labelHtml) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = labelHtml;
-            const newLable = tempDiv.firstElementChild;
+            const newLabel = tempDiv.firstElementChild;
 
-            if (newLable) {
-                lableEl.replaceWith(newLable);
+            if (newLabel) {
+                labelEl.replaceWith(newLabel);
             }
         }
     }

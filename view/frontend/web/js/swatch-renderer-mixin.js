@@ -14,32 +14,35 @@ define([
         $.widget('mage.SwatchRenderer', SwatchRenderer, {
             _OnClick: function ($this, $widget) {
                 this._super($this, $widget);
-                this.processLable();
+                this.processLabel();
             },
 
             _OnChange: function ($this, $widget) {
                 this._super($this, $widget);
-                this.processLable();
+                this.processLabel();
             },
 
-            processLable: function () {
+            processLabel: function () {
                 if (this.options.jsonConfig.productId) {
-                    let lableEl = null;
+                    let labelEl = null;
     
                     if (this.inProductList) {
                         const listItem = this.element.closest('li.item').get(0); // Convert jQuery object to a native DOM element
 
                         if (listItem) {
-                            lableEl = listItem.querySelector('.mf-label-container');
+                            labelEl = listItem.querySelector('.mf-label-container');
                         }
                     } else {
-                        lableEl = document.querySelector('.mfpl-product-page');
+                        labelEl = document.querySelector('.mfpl-product-page');
                     }
     
-                    console.log({lableEl});
-    
-                    if (lableEl) {
-                        MagefanPL.processConfigurableProductLabel(lableEl, this.options.jsonConfig.productId, this.getProductId());
+                    if (labelEl) {
+                        MagefanPL.processConfigurableProductLabel(
+                            labelEl,
+                            this.options.jsonConfig.productId,
+                            this.getProductId(),
+                            this.inProductList ? 0 : 1
+                        );
                     }
                 }
             }
