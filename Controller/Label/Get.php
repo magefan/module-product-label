@@ -12,6 +12,8 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Catalog\Model\Product;
 use Magefan\ProductLabel\Model\GetLabels;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Model\Product\Attribute\Source\Status;
 
 class Get extends \Magento\Framework\App\Action\Action
 {
@@ -26,26 +28,45 @@ class Get extends \Magento\Framework\App\Action\Action
     protected $getLabels;
 
     /**
+     * @var ProductRepositoryInterface
+     */
+    protected $productRepository;
+
+    /**
      * Get constructor.
      * @param Context $context
      * @param JsonFactory $jsonResultFactory
-     * @param PageFactory $resultPageFactory
      * @param GetLabels $getLabels
+     * @param ProductRepositoryInterface $productRepository
      */
     public function __construct(
         Context $context,
         JsonFactory $jsonResultFactory,
-        GetLabels $getLabels
+        GetLabels $getLabels,
+        ProductRepositoryInterface $productRepository
     ) {
         parent::__construct($context);
         $this->jsonResultFactory = $jsonResultFactory;
         $this->getLabels = $getLabels;
+        $this->productRepository = $productRepository;
     }
 
     public function execute()
     {
         $result = $this->jsonResultFactory->create();
-        $replaceMap = $this->getLabels->execute($this->getProductIds(), $this->getProductIdsForProductPage());
+
+        $productIds = $this->getProductIds();
+        $productIdsForProductPage = $this->getProductIdsForProductPage();
+
+        if ($this->getRequest()->getParam('get_children') && isset($this->getProductIds()[0])) {
+            $productIds = $this->getChildProductIds($this->getProductIds()[0]);
+
+            if ($this->getRequest()->getParam('product_page')) {
+                $productIdsForProductPage = $productIds;
+            }
+        }
+
+        $replaceMap = $this->getLabels->execute($productIds, $productIdsForProductPage);
 
         $result->setData([
             'labels' => $replaceMap
@@ -97,5 +118,30 @@ class Get extends \Magento\Framework\App\Action\Action
     private function getProductIdsForProductPage(): array
     {
         return $this->getProductIdsFromRequest('product_ids_for_product_page');
+    }
+
+    /**
+     * @param int $parentProductId
+     * @return array
+     */
+    private function getChildProductIds(int $parentProductId): array
+    {
+        $childProductIds = [];
+
+        $currentProduct = $this->productRepository->getById($parentProductId);
+
+        if ('configurable' != $currentProduct->getTypeId()) {
+            return $childProductIds;
+        }
+
+        $childProducts = $currentProduct->getTypeInstance()->getUsedProducts($currentProduct, null);
+
+        foreach ($childProducts as $childProduct) {
+            if ((int) $childProduct->getStatus() === Status::STATUS_ENABLED) {
+                $childProductIds[] = $childProduct->getId();
+            }
+        }
+
+        return $childProductIds;
     }
 }

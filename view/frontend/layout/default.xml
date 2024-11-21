@@ -9,6 +9,8 @@
     <body>
         <referenceContainer name="after.body.start">
             <block class="Magefan\ProductLabel\Block\LabelCss" name="mf.label.css" template="Magefan_ProductLabel::label-css.phtml"/>
+
+            <block class="Magefan\Community\Block\JsScript" name="mf.ajax" template="Magefan_Community::js/ajax.phtml" />
         </referenceContainer>
     </body>
 </page>

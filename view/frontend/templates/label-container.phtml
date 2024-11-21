@@ -11,7 +11,7 @@
 ?>
 
 <?php if ($productLabels) { ?>
-    <div class="mf-label-container">
+    <div class="mf-label-container <?= $block->getAdditionalCssClass() ?>">
         <?php foreach ($productLabels as $position => $labels) { ?>
             <div class="mf-label mf-label-position-<?= $escaper->escapeHtml($position) ?>">
                 <?php foreach ($labels as $label) { ?>

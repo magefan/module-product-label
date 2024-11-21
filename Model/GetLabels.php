@@ -95,6 +95,7 @@ class GetLabels
             $htmlToReplace = $this->layout
                 ->createBlock(\Magefan\ProductLabel\Block\Label::class)
                 ->setProductLabels($productLabels)
+                ->setAdditionalCssClass($forProductPage ? 'mfpl-product-page' : '')
                 ->toHtml();
 
             if ($htmlToReplace) {
