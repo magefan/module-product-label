@@ -5,7 +5,8 @@
 
 define([
     'jquery',
-    'jquery-ui-modules/widget'
+    'jquery-ui-modules/widget',
+    'Magefan_ProductLabel/js/label'
 ], function ($) {
     'use strict';
 
@@ -13,67 +14,33 @@ define([
         $.widget('mage.SwatchRenderer', SwatchRenderer, {
             _OnClick: function ($this, $widget) {
                 this._super($this, $widget);
-                this.dispatchItemSelect();
+                this.processLable();
             },
 
             _OnChange: function ($this, $widget) {
                 this._super($this, $widget);
-                this.dispatchItemSelect();
+                this.processLable();
             },
 
-            dispatchItemSelect: function () {
+            processLable: function () {
                 if (this.options.jsonConfig.productId) {
-                    this.processProductLabel(this.options.jsonConfig.productId, this.getProductId());
-                }
+                    let lableEl = null;
+    
+                    if (this.inProductList) {
+                        const listItem = this.element.closest('li.item').get(0); // Convert jQuery object to a native DOM element
 
-                $(document).trigger('mfChildItemSelected', {
-                    mainProductId: this.options.jsonConfig.productId,
-                    selectedProductId: this.getProductId()});
-            },
-
-            processProductLabel: function (maintProductID, selectedProductId) {
-                var self = this;
-                console.log({maintProductID})
-                console.log({selectedProductId})
-
-
-                if (!window.mfLabelProcessed) {
-                    window.mfLabelProcessed = {};
-                }
-
-                if (!window.mfLabelProcessed[maintProductID]) {
-                    let url = BASE_URL + 'mfpl/label/get?product_ids=' + maintProductID + '&get_children=1&product_page=' +  (this.inProductList ? '0' : '1');
-
-                    MagefanJs.ajax({'url':url, 'type': 'GET',
-                        success:  function(response) {
-                            response = JSON.parse(response)
-                            console.log(response);
-                            window.mfLabelProcessed[maintProductID] = response.labels;
-                            self.replaceLabel(maintProductID, selectedProductId)
+                        if (listItem) {
+                            lableEl = listItem.querySelector('.mf-label-container');
                         }
-                    });
-                } else {
-                    self.replaceLabel(maintProductID, selectedProductId)
-                }
-            },
-
-            replaceLabel: function (maintProductID, selectedProductId) {
-                let mainLableEl = null;
-
-                if (this.inProductList) {
-                    mainLableEl = this.element.closest('li.item')
-                        .find('.mf-label-container');
-                } else {
-                    mainLableEl = $('.mfpl-product-page');
-                }
-
-                console.log({mainLableEl});
-                let labelHtml =  window.mfLabelProcessed[maintProductID] && window.mfLabelProcessed[maintProductID][selectedProductId]
-                    ? window.mfLabelProcessed[maintProductID][selectedProductId] : '';
-                console.log(labelHtml);
-
-                if (labelHtml) {
-                    mainLableEl.replaceWith(labelHtml);
+                    } else {
+                        lableEl = document.querySelector('.mfpl-product-page');
+                    }
+    
+                    console.log({lableEl});
+    
+                    if (lableEl) {
+                        MagefanPL.processConfigurableProductLabel(lableEl, this.options.jsonConfig.productId, this.getProductId());
+                    }
                 }
             }
         });
