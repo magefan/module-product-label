@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" ?>
 <!--
 /**
  * Copyright © Magefan (support@magefan.com). All rights reserved.
@@ -7,22 +7,21 @@
 -->
 
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="Magefan\ProductLabel\ImageUpload" type="Magefan\ProductLabel\Model\ImageUploader">
-        <arguments>
-            <argument name="baseTmpPath" xsi:type="string">magefan_product_label/tmp</argument>
-            <argument name="basePath" xsi:type="string">magefan_product_label</argument>
-            <argument name="allowedExtensions" xsi:type="array">
-                <item name="jpg" xsi:type="string">jpg</item>
-                <item name="jpeg" xsi:type="string">jpeg</item>
-                <item name="gif" xsi:type="string">gif</item>
-                <item name="png" xsi:type="string">png</item>
-            </argument>
-        </arguments>
-    </virtualType>
+    <type name="Magento\Catalog\Block\Product\Image">
+        <plugin name="wrap_image_with_mf_comments" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\Image" sortOrder="10" disabled="false"/>
+    </type>
+    <type name="Magento\Framework\Controller\ResultInterface">
+        <plugin name="replace_mf_comments_on_product_labels" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Framework\Controller\ResultInterface" sortOrder="-21" disabled="false"/>
+    </type>
+    <type name="Magento\Catalog\Block\Product\View\Gallery">
+        <plugin name="wrap_gallery_image_with_mf_comments" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\View\Gallery" sortOrder="10" disabled="false"/>
+    </type>
 
-    <type name="Magefan\ProductLabel\Controller\Adminhtml\Rule\Upload">
-        <arguments>
-            <argument name="imageUploader" xsi:type="object">Magefan\ProductLabel\ImageUpload</argument>
-        </arguments>
+    <type name="MageSuite\ProductTile\Block\Tile\Container">
+        <plugin name="add_mf_comments_to_mage_suite_product_tile" type="Magefan\ProductLabel\Plugin\Frontend\MageSuite\ProductTile\Block\Tile\Container" sortOrder="10" disabled="false"/>
+    </type>
+
+    <type name="Codazon\ThemeLayoutPro\Helper\Data">
+        <plugin name="add_mf_comments_to_codazon_theme_layout_pro_data_helper" type="Magefan\ProductLabel\Plugin\Frontend\Codazon\ThemeLayoutPro\Helper\Data" sortOrder="10" disabled="false"/>
     </type>
 </config>
