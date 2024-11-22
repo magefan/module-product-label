@@ -22,7 +22,16 @@
     <?php $script = "
     require(['jquery'], function ($) {
         $('[data-gallery-role=gallery-placeholder]').on('gallery:loaded', function () {
-            $(this).parent().find('.mf-label-container').prependTo('" . $escaper->escapeHtml($block->getConfig()->getProductPageContainerSelector()) . "')
+
+            let mfLabelContainer = $(this).parent().find('.mf-label-container');
+
+            if (!mfLabelContainer.length) {
+                mfLabelContainer = $('.product.media .mf-label-container');
+            }
+
+            if (mfLabelContainer.length) {
+                mfLabelContainer.prependTo('" . $escaper->escapeHtml($block->getConfig()->getProductPageContainerSelector()) . "')
+            }
         });
     });
    "; ?>
