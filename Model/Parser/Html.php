@@ -8,44 +8,14 @@ declare(strict_types=1);
 
 namespace Magefan\ProductLabel\Model\Parser;
 
-use Magefan\ProductLabel\Model\GetProductIdsToRuleIdsMap;
-use Magefan\ProductLabel\Model\ResourceModel\Rule\CollectionFactory as RuleCollectionFactory;
-use Magento\Store\Model\StoreManagerInterface;
-use Magefan\ProductLabel\Model\Config;
-use Magento\Framework\View\LayoutInterface;
 use Magento\Framework\App\RequestInterface;
-use Magefan\ProductLabel\Api\LabelProcessorInterface;
+use Magefan\ProductLabel\Model\GetLabels;
 
 class Html
 {
     const COMMENT_PREFIX = '<!--mf_product_label_comment_';
-
+    const COMMENT_PREFIX_GALLERY = '<!--mf_product_label_gallery_comment_';
     const COMMENT_SUFFIX = '-->';
-
-    /**
-     * @var GetProductIdsToRuleIdsMap
-     */
-    protected $getProductIdsToRuleIdsMap;
-
-    /**
-     * @var RuleCollectionFactory
-     */
-    protected $ruleCollectionFactory;
-
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $storeManager;
-
-    /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var LayoutInterface
-     */
-    protected $layout;
 
     /**
      * @var RequestInterface
@@ -57,33 +27,17 @@ class Html
      */
     protected $fan;
 
-    protected $labelProcessor;
-
     /**
-     * @param GetProductIdsToRuleIdsMap $getProductIdsToRuleIdsMap
-     * @param RuleCollectionFactory $ruleCollectionFactory
-     * @param StoreManagerInterface $storeManager
-     * @param Config $config
-     * @param LayoutInterface $layout
-     * @param RequestInterface $request
-     * @param LabelProcessorInterface|null $labelProcessor
+     * @var GetLabels
      */
+    protected $getLabels;
+
     public function __construct(
-        GetProductIdsToRuleIdsMap $getProductIdsToRuleIdsMap,
-        RuleCollectionFactory     $ruleCollectionFactory,
-        StoreManagerInterface $storeManager,
-        Config $config,
-        LayoutInterface $layout,
         RequestInterface $request,
-        ?LabelProcessorInterface $labelProcessor = null
+        GetLabels $getLabels
     ) {
-        $this->getProductIdsToRuleIdsMap = $getProductIdsToRuleIdsMap;
-        $this->ruleCollectionFactory = $ruleCollectionFactory;
-        $this->storeManager = $storeManager;
-        $this->config = $config;
-        $this->layout = $layout;
         $this->request = $request;
-        $this->labelProcessor = $labelProcessor;
+        $this->getLabels = $getLabels;
 
         $this->fan = $this->request->getFullActionName();
     }
@@ -95,77 +49,49 @@ class Html
     public function execute(string $output): string
     {
         $isOutputIsJson = $this->json_validate($output);
-        
+
         $productIds = $this->getProductIds($output);
-        [$ruleIds, $productIdRuleIds] = $this->getProductIdsToRuleIdsMap->execute($productIds);
+        $currentPageProductId = $this->fan == 'catalog_product_view' ? $this->getCurrentPageProductId($output) : 0;
+        $productIdsForProductPage = [];
 
-        $rules = $this->ruleCollectionFactory->create()
-            ->addActiveFilter()
-            ->addFieldToFilter('id', ['in' => $ruleIds])
-            ->addStoreFilter($this->storeManager->getStore()->getId())
-            ->setOrder('priority', 'asc');
-
-        $replaceMap = [];
-
-        foreach ($productIdRuleIds as $productId => $productRuleIds) {
-            $productLabels = $this->getProductLabels($rules, $productRuleIds);
-
-            $htmlToReplace = $this->layout
-                ->createBlock(\Magefan\ProductLabel\Block\Label::class)
-                ->setProductLabels($productLabels)
-                ->toHtml();
-
-            if ($htmlToReplace) {
-                $replaceMap[$productId] = $htmlToReplace;
-            }
+        if ($currentPageProductId) {
+            $productIds[] = $currentPageProductId;
+            $productIdsForProductPage[] = $currentPageProductId;
         }
 
-        if (null !== $this->labelProcessor) {
-            $replaceMap = $this->labelProcessor->execute($replaceMap, $productIds);
-        }
+        $replaceMap = $this->getLabels->execute($productIds, $productIdsForProductPage);
 
         foreach ($replaceMap as $productId => $replace) {
             $replace = $isOutputIsJson ? trim(json_encode($replace),'"') : $replace;
-            $output = str_replace(self::COMMENT_PREFIX . $productId . self::COMMENT_SUFFIX, $replace, $output);
+
+            $output = ($currentPageProductId && $currentPageProductId == $productId)
+                ? str_replace(self::COMMENT_PREFIX_GALLERY . $productId . self::COMMENT_SUFFIX, $replace, $output)
+                : str_replace(self::COMMENT_PREFIX         . $productId . self::COMMENT_SUFFIX, $replace, $output);
         }
 
         return $output;
     }
 
-    public function getProductLabels($rules, $productRuleIds): array
+
+    /**
+     * @param string $html
+     * @return int
+     */
+    private function getCurrentPageProductId(string $html): int
     {
-        $forProductPage = $this->fan == 'catalog_product_view';
+        $pattern = '/' . self::COMMENT_PREFIX_GALLERY . '(.*?)' . self::COMMENT_SUFFIX . '/';
+        preg_match_all($pattern, $html, $matches);
 
-        $productLabelsCount = 0;
-        $productLabels = [];
 
-        $discardRulePerPosition = [];
+        foreach ($matches[1] as $commentData) {
+            $productId = (int)$commentData;
 
-        foreach ($rules as $rule) {
-            if (in_array($rule->getId(), $productRuleIds)) {
-                $productLabelsCount++;
-
-                if ($forProductPage) {
-                    $position = $rule->getPpPosition() ?: $rule->getPosition();
-                } else {
-                    $position = $rule->getPosition() ?: 'top-left';
-                }
-
-                if (!isset($discardRulePerPosition[$position])) {
-                    $productLabels[$position][] = $rule->getLabelData($forProductPage);
-                }
-
-                if ($rule->getDiscardSubsequentRules()) {
-                    $discardRulePerPosition[$position] = true;
-                }
-            }
-
-            if ($productLabelsCount >= $this->config->getLabelsPerProduct()) {
-                break;
+            if ($productId) {
+                return $productId;
             }
         }
 
-        return $productLabels;
+        return 0;
     }
 
     /**
@@ -187,8 +113,8 @@ class Html
 
         return $productIds;
     }
-    
-    private function json_validate($json, $depth = 512, $flags = 0) 
+
+    private function json_validate($json, $depth = 512, $flags = 0)
     {
         if (!is_string($json)) {
             return false;
@@ -199,7 +125,7 @@ class Html
         if ($trimmedJson[0] !== '{' && $trimmedJson[0] !== '[') {
             return false;
         }
-    
+
         // Decode JSON and check for errors
         json_decode($json, false, $depth, $flags);
         return json_last_error() === JSON_ERROR_NONE;

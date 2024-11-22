@@ -171,6 +171,7 @@ class ProductLabelAction
                 $rule->setData('conditions_serialized', $conditionsSerialized);
                 $rule->setData('store_ids', $item->getStoreIds());
                 $rule->setData('apply_by', $item->getData('apply_by'));
+                $rule->setData('display_on_parent', $item->getData('display_on_parent'));
 
                 $ruleId = $item->getId();
 
@@ -286,10 +287,12 @@ class ProductLabelAction
             }
         }
 
-        $this->productIds = array_merge(
-            $this->productIds,
-            $this->getParentProductIds->execute($this->productIds)
-        );
+        if ($rule->getDisplayOnParent()) {
+            $this->productIds = array_merge(
+                $this->productIds,
+                $this->getParentProductIds->execute($this->productIds)
+            );
+        }
 
         return array_unique($this->productIds);
     }
