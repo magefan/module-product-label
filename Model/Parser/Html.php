@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace Magefan\ProductLabel\Model\Parser;
 
-use Magento\Framework\App\RequestInterface;
 use Magefan\ProductLabel\Model\GetLabels;
 
 class Html
@@ -18,28 +17,14 @@ class Html
     const COMMENT_SUFFIX = '-->';
 
     /**
-     * @var RequestInterface
-     */
-    protected $request;
-
-    /**
-     * @var
-     */
-    protected $fan;
-
-    /**
      * @var GetLabels
      */
     protected $getLabels;
 
     public function __construct(
-        RequestInterface $request,
         GetLabels $getLabels
     ) {
-        $this->request = $request;
         $this->getLabels = $getLabels;
-
-        $this->fan = $this->request->getFullActionName();
     }
 
     /**
@@ -51,7 +36,7 @@ class Html
         $isOutputIsJson = $this->json_validate($output);
 
         $productIds = $this->getProductIds($output);
-        $currentPageProductId = $this->fan == 'catalog_product_view' ? $this->getCurrentPageProductId($output) : 0;
+        $currentPageProductId = $this->getCurrentPageProductId($output);
         $productIdsForProductPage = [];
 
         if ($currentPageProductId) {
