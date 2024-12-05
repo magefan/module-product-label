@@ -10,9 +10,19 @@
     <type name="Magento\Catalog\Block\Product\Image">
         <plugin name="wrap_image_with_mf_comments" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\Image" sortOrder="10" disabled="false"/>
     </type>
+
+    
+
     <type name="Magento\Framework\Controller\ResultInterface">
         <plugin name="replace_mf_comments_on_product_labels" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Framework\Controller\ResultInterface" sortOrder="-21" disabled="false"/>
     </type>
+
+     <type name="Magento\Framework\App\ActionInterface">
+        <plugin name="replace_mf_comments_on_product_labels_in_ajax_requests" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Framework\App\ActionInterface" sortOrder="10001"/>
+    </type>
+
+    
+
     <type name="Magento\Catalog\Block\Product\View\Gallery">
         <plugin name="wrap_gallery_image_with_mf_comments" type="Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\View\Gallery" sortOrder="10" disabled="false"/>
     </type>
