@@ -3,17 +3,23 @@
 [![Total Downloads](https://poser.pugx.org/magefan/module-product-label/downloads)](https://packagist.org/packages/magefan/module-product-label)
 [![Latest Stable Version](https://poser.pugx.org/magefan/module-product-label/v/stable)](https://packagist.org/packages/magefan/module-product-label)
 
-<a href="https://savelife.in.ua/en/donate-en/#donate-army-card-monthly"><img width="830" height="208" src="https://cm.magefan.com/blog/support-ukraine.png"></a>
-
-<img width="150" height="100" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg">
-
 <img align="right" width="120" height="120" src="https://cm.magefan.com/catalog/product/cache/28b407cef1668fd0bdd6f36db3e8e2f0/i/c/icon-product-labels.jpg">
 
-[Magento 2 Product Label](https://magefan.com/magento-2-product-labels) is an extension that allows you to drive customers’ attention to specific products with eye-catching labels. Text, shape and image labels - you name it. Magefan Product Labels helps you to create a multitude of product labels in a few clicks and display them using handy conditions.
+[Magento 2 Product Labels](https://magefan.com/magento-2-product-labels) is an extension that allows you to drive customers’ attention to specific products with eye-catching labels. Text, shape and image labels - you name it. Magefan Product Labels helps you to create a multitude of product labels in a few clicks and display them using handy conditions.
 
 No need to handle product labels in Magento manually. Just set up the rules once and the extension will display them dynamically across your website pages.
 
-<a href="https://magefan.com/magento-2-product-labels"><img width="190" height="70" src="https://cm.magefan.com/wysiwyg/products/download-magefan-extensions.png"></a><a href="https://magefan.com/magento-2-product-labels#live-demo"><img width="190" height="70" src="https://cm.magefan.com/wysiwyg/products/magefan-live-demo.png"></a>
+<img  align="right" width="120" height="70" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg">
+
+
+<a href="https://magefan.com/magento-2-product-labels"><img width="190" height="70" src="https://cm.magefan.com/wysiwyg/products/download-magefan-extensions.png"></a><a href="https://magefan.com/contact?question=request-free-trial&product_id=1994#contact-form-fields"><img width="190" height="70" src="https://cm.magefan.com/wysiwyg/free-trial.png"> 
+
+## Useful Links
+  * [User Guide](https://magefan.com/magento-2-product-labels/documentation)
+  * [Change Log](https://magefan.com/magento-2-product-labels/change-log)
+  * [FAQs](https://magefan.com/magento-2-product-labels#pattr-faq)
+
+## 🇺🇦 Stand with Ukraine! [How can you help?](https://magefan.com/blog/join-our-donations)
 
 ## Requirements
   * Magento Community 2.2.0-2.4.x (CE, EE, ECE, B2B)
@@ -29,11 +35,11 @@ No need to handle product labels in Magento manually. Just set up the rules once
         </a>
                 
 ## Benefits
-* Text-, shape- and image-based product labels in Magento
-* Display product labels using product attribute conditions
-* Display product labels based on customer groups 
-* Show multiple badges per one product page 
-* Enable and disable the product labels automatically
+* [Create Text-, Shape- and Image-Based Product Labels in Magento](https://github.com/magefan/module-product-label#create-text--shape--and-image-based-product-labels-in-magento)
+* [Use Ready-Made Product Labels Library](https://github.com/magefan/module-product-label#use-ready-made-product-labels-library)
+* [Use Conditions to Display Product Labels](https://github.com/magefan/module-product-label#use-conditions-to-display-product-labels)
+* [Show Multiple Labels per One Product](https://github.com/magefan/module-product-label#show-multiple-labels-per-one-product)
+* [Create Product Labels for Separate Customer Groups](https://github.com/magefan/module-product-label#create-product-labels-for-separate-customer-groups)
 
 ## Features
 
@@ -95,6 +101,55 @@ You can create product labels for each customer group. Offer higher discounts fo
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/product-labels-based-on-product-rules_1.png">
 </p>
 
+## Demo
+
+Try out our open demo and if you like our extension **please give us some star on Github ★**
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="middle">
+        Storefront Demo
+      </td>
+      <td align="center" valign="middle">
+        Admin Panel Demo
+      </td align="center" valign="middle">
+    </tr>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="https://pl.demo.magefan.top/women/tops-women/tees-women.html">
+          <img
+            src="https://magefan.com/static/version1520969775/frontend/Magefan/new/en_US/images/product-tab-demo-1.jpg"
+            alt="Magento 2 Product Labels Storefront Demo"
+            height="220"
+          >
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://pl.demo.magefan.top/admin/mfproductlabel/rule/">
+          <img
+            src="https://cs.magefan.com/version1732118579/frontend/Magefan/next/en_US/Magefan_CssOptimizer/images/product-tab-demo-2.jpg"
+            alt="Magento 2 Product Labels Admin Panel Demo"
+            height="220"
+          >
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" valign="middle">
+        <a href="https://pl.demo.magefan.top/women/tops-women/tees-women.html">
+          view
+        </a>
+      </td>
+      <td align="center" valign="middle">
+        <a href="https://pl.demo.magefan.top/admin/mfproductlabel/rule/">
+          view
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
 ## Support
 If you have any issues, please [contact us](mailto:support@magefan.com)
 then if you still need help, open a bug report in GitHub's
@@ -106,13 +161,6 @@ https://magefan.com/contact
 
 ## License
 The code is licensed under [EULA](https://magefan.com/end-user-license-agreement).
-
-## Documentation
-
-**General**
-* [How to install Magento 2 Product Labels?](https://magefan.com/magento-2-product-labels/installation)
-* [How to update Magento 2 Product Labels?](https://magefan.com/magento-2-product-labels/updating)
-* [How to uninstall Magento 2 Product Labels?](https://magefan.com/magento-2-product-labels/uninstalling)
 
 ## [Magento 2 Extensions](https://magefan.com/magento-2-extensions) by Magefan
 
