@@ -15,7 +15,7 @@ interface RuleInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
     /**
      * Get name
-     * @return string|null
+     * @return mixed
      */
     public function getLabelData();
 }

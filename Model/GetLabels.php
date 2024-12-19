@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Magefan\ProductLabel\Model;
 
+use Magefan\ProductLabel\Api\GetLabelsInterface;
 use Magefan\ProductLabel\Model\Config;
 use Magento\Store\Model\StoreManagerInterface;
 use Magefan\ProductLabel\Model\GetProductIdsToRuleIdsMap;
@@ -14,7 +15,7 @@ use Magefan\ProductLabel\Model\ResourceModel\Rule\CollectionFactory as RuleColle
 use Magefan\ProductLabel\Api\LabelProcessorInterface;
 use Magento\Framework\View\LayoutInterface;
 
-class GetLabels
+class GetLabels implements GetLabelsInterface
 {
     /**
      * @var Config
@@ -48,6 +49,7 @@ class GetLabels
 
     /**
      * GetLabels constructor.
+     * @param \Magefan\ProductLabel\Model\Config $config
      * @param StoreManagerInterface $storeManager
      * @param \Magefan\ProductLabel\Model\GetProductIdsToRuleIdsMap $getProductIdsToRuleIdsMap
      * @param RuleCollectionFactory $ruleCollectionFactory
@@ -72,10 +74,11 @@ class GetLabels
 
     /**
      * @param array $productIds
-     * @param $idsUseForProductPage
+     * @param array $productIdsForProductPage
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function execute(array $productIds, $productIdsForProductPage = []): array
+    public function execute(array $productIds, array $productIdsForProductPage = []): array
     {
         [$ruleIds, $productIdRuleIds] = $this->getProductIdsToRuleIdsMap->execute($productIds);
 
