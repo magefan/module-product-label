@@ -81,6 +81,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
     /**
      * Retrieve image url
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getImageUrl()
     {
@@ -100,6 +101,7 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
      * Retrieve media url
      * @param string $file
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getMediaUrl(string $file): string
     {
@@ -108,7 +110,8 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
     }
 
     /**
-     * @return string
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function getLabelData(): array
     {
