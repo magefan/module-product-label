@@ -26,7 +26,7 @@ class Info extends \Magefan\Community\Block\Adminhtml\System\Config\Form\Info
      */
     protected function getModuleTitle()
     {
-        return 'Product Label Extension';
+        return 'Product Labels Extension';
     }
 
     /**
