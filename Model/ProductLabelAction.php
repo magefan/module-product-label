@@ -146,12 +146,10 @@ class ProductLabelAction
             ->addFieldToFilter('status', 1);
 
         if (isset($params['rule_id'])) {
-            $ruleId = (int)$params['rule_id'];
-            if ($ruleId) {
-                $ruleCollection->addFieldToFilter('id', $ruleId);
-            }
+            $ruleIds = (array)$params['rule_id'];
+            $ruleCollection->addFieldToFilter('id', ['in' => $ruleIds]);
         }
-        
+
         if ($ruleCollection) {
             if (!$this->isRuleWilBeAppliedForSpecificProduct($params)) {
                 $select = $this->connection->select()
@@ -325,7 +323,7 @@ class ProductLabelAction
      * @param array $params
      * @return bool
      */
-    protected function isRuleWilBeAppliedForSpecificProduct(array $params): bool 
+    protected function isRuleWilBeAppliedForSpecificProduct(array $params): bool
     {
         return $params && isset($params['rule_apply_type']) && ($params['rule_apply_type'] == ApplyByOptions::ON_PRODUCT_SAVE);
     }
