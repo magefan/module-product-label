@@ -9,7 +9,7 @@
     <system>
         <section id="mfproductlabel" translate="label" sortOrder="10133090490" showInDefault="1" showInWebsite="1" showInStore="1">
             <class>separator-top</class>
-            <label>Product Label</label>
+            <label>Product Labels</label>
             <tab>magefan</tab>
             <resource>Magefan_ProductLabel::mfproductlabel</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
