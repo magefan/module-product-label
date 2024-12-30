@@ -30,6 +30,7 @@ class Html
     /**
      * @param string $output
      * @return string
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute(string $output): string
     {

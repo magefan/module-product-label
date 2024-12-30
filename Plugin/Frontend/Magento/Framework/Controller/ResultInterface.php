@@ -30,8 +30,10 @@ class ResultInterface
     private $request;
 
     /**
+     * ResultInterface constructor.
      * @param Html $htmlParser
      * @param Config $config
+     * @param \Magento\Framework\App\RequestInterface $request
      */
     public function __construct(
         Html $htmlParser,
@@ -49,6 +51,7 @@ class ResultInterface
      * @param Subject $result
      * @param ResponseInterface $response
      * @return Subject
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function afterRenderResult(
         Subject $subject,
