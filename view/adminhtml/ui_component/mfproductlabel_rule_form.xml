@@ -287,17 +287,31 @@
                             <![CDATA[
                                 <div class="custom_position_description">
                                     <p>To insert label in custom position need to add next string in your template:<br><br>
-                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
                                         <hr>
-                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                         &lt;!--mf_product_label_comment_7____product_list_after_price--&gt;  &nbsp; (7 - product id, product_list_after_price - selected position)
                                     </p>
                                 </div>
                             ]]>
                         </item>
                     </item>
                 </argument>
+            </field>
+
+            <field name="custom_position" formElement="select" sortOrder="22">
+                <settings>
+                    <label translate="true">Custom Position</label>
+                    <dataScope>custom_position</dataScope>
+                </settings>
+                <formElements>
+                    <select>
+                        <settings>
+                            <options class="Magefan\ProductLabel\Model\Config\Source\CustomPosition"/>
+                        </settings>
+                    </select>
+                </formElements>
             </field>
 
             <field name="label_type" sortOrder="30" formElement="input">
@@ -460,17 +474,31 @@
                             <![CDATA[
                                 <div class="custom_position_description">
                                     <p>To insert label in custom position need to add next string in your template:<br><br>
-                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
                                         <hr>
-                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                        &lt;!--mf_product_label_comment_7____product_list_after_price--&gt;  &nbsp; (7 - product id, product_list_after_price - selected position)
                                     </p>
                                 </div>
                             ]]>
                         </item>
                     </item>
                 </argument>
+            </field>
+
+            <field name="pp_custom_position" formElement="select" sortOrder="22">
+                <settings>
+                    <label translate="true">Custom Position</label>
+                    <dataScope>pp_custom_position</dataScope>
+                </settings>
+                <formElements>
+                    <select>
+                        <settings>
+                            <options class="Magefan\ProductLabel\Model\Config\Source\CustomPosition"/>
+                        </settings>
+                    </select>
+                </formElements>
             </field>
 
             <field name="pp_label_type" sortOrder="30" formElement="input">

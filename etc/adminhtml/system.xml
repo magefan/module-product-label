@@ -46,6 +46,15 @@
                     <source_model>Magefan\ProductLabel\Model\Config\Source\PageType</source_model>
                     <can_be_empty>1</can_be_empty>
                 </field>
+
+                <field id="custom_positions" showInDefault="1" showInStore="1" showInWebsite="1" sortOrder="70" translate="label" type="textarea" canRestore="1">
+                    <label>Custom Positions</label>
+                    <frontend_model>Magefan\ProductLabel\Block\Adminhtml\System\Config\Form\DynamicRow</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment><![CDATA[
+                        These positions will be available in the rule, when you choose position "Custom". There you can select the position from this list.
+                        ]]></comment>
+                </field>
             </group>
         </section>
     </system>

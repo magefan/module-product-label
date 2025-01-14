@@ -23,12 +23,18 @@
     body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_image"],
     body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="pp_label_type"],
     body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_shape"],
-    body.use_the_same_label_for_product_page [data-index="product_page"] .html-preview
+    body.use_the_same_label_for_product_page [data-index="product_page"] .html-preview,
+    body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="pp_custom_position"]
     {display: none !important;}
 </style>
 
 <style>
+    [data-index="custom_position"],
+    [data-index="pp_custom_position"],
     .custom_position_description {display: none;}
+
+    body[position="custom"] [data-index="custom_position"],
+    body[pp_position="custom"] [data-index="pp_custom_position"] {display: block;}
 
     body[position="custom"]  [data-index="position"] .custom_position_description,
     body[pp_position="custom"] [data-index="pp_position"] .custom_position_description {
