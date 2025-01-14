@@ -9,6 +9,7 @@ declare(strict_types=1);
 namespace Magefan\ProductLabel\Model\Parser;
 
 use Magefan\ProductLabel\Model\GetLabels;
+use Magefan\ProductLabel\Model\Config;
 
 class Html
 {
