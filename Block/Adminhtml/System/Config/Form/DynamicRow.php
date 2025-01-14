@@ -19,7 +19,7 @@ class DynamicRow extends AbstractFieldArray
      */
     protected function _prepareToRender()
     {
-        $this->addColumn('position', ['label' => __('Position'), 'style' => 'width:350px']);
+        $this->addColumn('position', ['label' => __('Position')]);
         $this->_addAfter = false;
         $this->_addButtonLabel = __('Add');
     }
