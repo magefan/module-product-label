@@ -114,6 +114,7 @@ class GetLabels implements GetLabelsInterface
                         ->createBlock(\Magefan\ProductLabel\Block\Label::class)
                         ->setProductLabels([$customPositionName => $productLabelsForCustomPosition])
                         ->setAdditionalCssClass($forProductPage ? 'mfpl-product-page' : '')
+                        ->setIsCustomPosition(true)
                         ->toHtml();
 
                     if ($htmlToReplace) {
