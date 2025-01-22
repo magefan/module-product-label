@@ -10,7 +10,7 @@ namespace Magefan\ProductLabel\Model;
 
 use Magefan\ProductLabel\Model\ResourceModel\Rule\CollectionFactory as RuleCollectionFactory;
 use Magefan\ProductLabel\Model\CacheManager;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
+use Magefan\Community\Model\Magento\Product\CollectionOptimizedForSqlValidatorFactory as ProductCollectionFactory;
 use Magento\CatalogRule\Model\RuleFactory as CatalogRuleFactory;
 use Magento\Framework\App\ResourceConnection;
 use Magefan\Community\Model\Magento\Rule\Model\Condition\Sql\Builder as SqlBuilder;
