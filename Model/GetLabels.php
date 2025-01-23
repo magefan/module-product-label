@@ -95,6 +95,9 @@ class GetLabels implements GetLabelsInterface
 
             $productLabels = $this->getAvailableProductLabels($rules, $productRuleIds, $forProductPage);
 
+            $productLabelsForCustomPosition = $productLabels['custom'] ?? [];
+            unset($productLabels['custom']);
+
             $htmlToReplace = $this->layout
                 ->createBlock(\Magefan\ProductLabel\Block\Label::class)
                 ->setProductLabels($productLabels)
@@ -103,6 +106,21 @@ class GetLabels implements GetLabelsInterface
 
             if ($htmlToReplace) {
                 $replaceMap[$productId] = $htmlToReplace;
+            }
+
+            if ($productLabelsForCustomPosition) {
+                foreach ($productLabelsForCustomPosition as $customPositionName => $productLabelsForCustomPosition) {
+                    $htmlToReplace = $this->layout
+                        ->createBlock(\Magefan\ProductLabel\Block\Label::class)
+                        ->setProductLabels([$customPositionName => $productLabelsForCustomPosition])
+                        ->setAdditionalCssClass($forProductPage ? 'mfpl-product-page' : '')
+                        ->setIsCustomPosition(true)
+                        ->toHtml();
+
+                    if ($htmlToReplace) {
+                        $replaceMap[$productId] .= Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $htmlToReplace;
+                    }
+                }
             }
         }
 
@@ -137,7 +155,12 @@ class GetLabels implements GetLabelsInterface
                 }
 
                 if (!isset($discardRulePerPosition[$position])) {
-                    $productLabels[$position][] = $rule->getLabelData($forProductPage);
+                    if ($position == 'custom') {
+                        $customPosition = $forProductPage ? $rule->getData('pp_custom_position') : $rule->getData('custom_position');
+                        $productLabels[$position][$customPosition][] = $rule->getLabelData($forProductPage);
+                    } else {
+                        $productLabels[$position][] = $rule->getLabelData($forProductPage);
+                    }
                 }
 
                 if ($rule->getDiscardSubsequentRules()) {

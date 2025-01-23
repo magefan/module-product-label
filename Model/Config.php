@@ -9,6 +9,7 @@ namespace Magefan\ProductLabel\Model;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\Serialize\SerializerInterface;
 
 /**
  * Class Config
@@ -19,6 +20,16 @@ class Config
      * @var ScopeConfigInterface
      */
     protected $scopeConfig;
+
+    /**
+     * @var SerializerInterface
+     */
+    protected $serializer;
+
+    /**
+     * @var null
+     */
+    protected $customPositions = null;
 
     /**
      * Extension enabled config path
@@ -35,14 +46,20 @@ class Config
 
     const XML_PATH_EXCLUDE_PAGE_TYPES = 'mfproductlabel/general/exclude_page_types';
 
+    const XML_PATH_CUSTOM_POSITIONS = 'mfproductlabel/general/custom_positions';
+
+    const SPLITTERS_FOR_CUSTOM_POSITIONS = '<!--mfcp_splitter--!>';
+
     /**
-     * Config constructor.
      * @param ScopeConfigInterface $scopeConfig
+     * @param SerializerInterface $serializer
      */
     public function __construct(
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        SerializerInterface $serializer
     ) {
         $this->scopeConfig = $scopeConfig;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -100,4 +117,25 @@ class Config
         return explode(',', $pageTypes);
     }
 
+    /**
+     * @return array
+     */
+    public function getCustomPositions(): array
+    {
+        if (null == $this->customPositions) {
+            $this->customPositions = [];
+
+            try {
+                $customPositions = $this->serializer->unserialize($this->getConfig(self::XML_PATH_CUSTOM_POSITIONS));
+            } catch (\InvalidArgumentException $e) {
+                return $this->customPositions;
+            }
+
+            foreach ($customPositions as $positionData) {
+                $this->customPositions[$positionData['position']] = $positionData['position'];
+            }
+        }
+
+        return $this->customPositions;
+    }
 }

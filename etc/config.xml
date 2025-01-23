@@ -17,6 +17,15 @@
                 <pp_selector>.fotorama__stage__shaft</pp_selector>
                 <pl_selector>.product-image-wrapper</pl_selector>
                 <exclude_page_types></exclude_page_types>
+                <custom_positions>
+                    {
+                        "_1736868521129_129":{"position":"product_list_before_name"},
+                        "_1736868522601_601":{"position":"product_list_after_price"},
+                        "_1736868553357_357":{"position":"product_page_before_price"},
+                        "_1736868660176_176":{"position":"product_page_after_reviews"}
+                    }
+                </custom_positions>
+
             </general>
         </mfproductlabel>
 

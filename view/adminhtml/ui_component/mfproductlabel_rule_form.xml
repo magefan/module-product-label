@@ -287,11 +287,11 @@
                             <![CDATA[
                                 <div class="custom_position_description">
                                     <p>To insert label in custom position need to add next string in your template:<br><br>
-                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
                                         <hr>
-                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                         &lt;!--mf_product_label_comment_7____product_list_after_price--&gt;  &nbsp; (7 - product id, product_list_after_price - selected position)
                                     </p>
                                 </div>
                             ]]>
@@ -460,11 +460,11 @@
                             <![CDATA[
                                 <div class="custom_position_description">
                                     <p>To insert label in custom position need to add next string in your template:<br><br>
-                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '--&gt;' ?&gt;</code>
+                                        <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
                                         <hr>
-                                        &lt;!--mf_product_label_comment_7--&gt;  &nbsp; (7 - product id)
+                                        &lt;!--mf_product_label_comment_7____product_list_after_price--&gt;  &nbsp; (7 - product id, product_list_after_price - selected position)
                                     </p>
                                 </div>
                             ]]>
