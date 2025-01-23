@@ -300,20 +300,6 @@
                 </argument>
             </field>
 
-            <field name="custom_position" formElement="select" sortOrder="22">
-                <settings>
-                    <label translate="true">Custom Position</label>
-                    <dataScope>custom_position</dataScope>
-                </settings>
-                <formElements>
-                    <select>
-                        <settings>
-                            <options class="Magefan\ProductLabel\Model\Config\Source\CustomPosition"/>
-                        </settings>
-                    </select>
-                </formElements>
-            </field>
-
             <field name="label_type" sortOrder="30" formElement="input">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
@@ -485,20 +471,6 @@
                         </item>
                     </item>
                 </argument>
-            </field>
-
-            <field name="pp_custom_position" formElement="select" sortOrder="22">
-                <settings>
-                    <label translate="true">Custom Position</label>
-                    <dataScope>pp_custom_position</dataScope>
-                </settings>
-                <formElements>
-                    <select>
-                        <settings>
-                            <options class="Magefan\ProductLabel\Model\Config\Source\CustomPosition"/>
-                        </settings>
-                    </select>
-                </formElements>
             </field>
 
             <field name="pp_label_type" sortOrder="30" formElement="input">
