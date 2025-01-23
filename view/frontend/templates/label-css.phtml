@@ -6,6 +6,7 @@
 ?>
 <?php
 /** @var $block \Magefan\ProductLabel\Block\LabelCss */
+/** @var \Magefan\Community\Api\HyvaThemeDetectionInterface $mfHyvaThemeDetection */
 ?>
 
 <style>
@@ -13,9 +14,10 @@
     .mf-label-container .mf-label {position: absolute; z-index: 9; width: fit-content;}
     .mf-label-container .mf-label.mf-label-position-top-left {top: 0;left: 0;}
 
-    /* HYVA START */
+    <?php if ($mfHyvaThemeDetection->execute()) { ?>
     .product-item-photo {position: relative;}
-    /* HYVA END */
+    <?php } ?>
+
 </style>
 
 
