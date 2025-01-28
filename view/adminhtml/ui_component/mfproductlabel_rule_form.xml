@@ -286,7 +286,7 @@
                         <item name="additionalInfo" xsi:type="string">
                             <![CDATA[
                                 <div class="custom_position_description">
-                                    <p>To insert label in custom position need to add next string in your template:<br><br>
+                                    <p>To insert label in a custom position you need to add the following string in your template:<br><br>
                                         <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
@@ -459,7 +459,7 @@
                         <item name="additionalInfo" xsi:type="string">
                             <![CDATA[
                                 <div class="custom_position_description">
-                                    <p>To insert label in custom position need to add next string in your template:<br><br>
+                                    <p>To insert label in a custom position you need to add the following string in your template:<br><br>
                                         <code style="font-size: 12px"> &lt;?= '&lt;!--mf_product_label_comment_' . $product-&gt;getId() . '____your_position--&gt;' ?&gt;</code>
                                         <br>
                                         <br>
