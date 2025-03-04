@@ -7,7 +7,9 @@
 
 <style>
     fieldset[data-index="container_image"] .admin__field .admin__field-label,
-    fieldset[data-index="container_text_or_html"] .admin__field .admin__field-label {height: auto!important;position: relative !important;width: fit-content !important;}
+    fieldset[data-index="container_text_or_html"] .admin__field .admin__field-label,
+    fieldset [data-index="redirect_url"]  .admin__field-label
+    {height: auto!important;position: relative !important;width: fit-content !important;}
 
     fieldset[data-index="container_image"]  [data-index="image"] .admin__field-label,
     fieldset[data-index="container_image"]  [data-index="pp_image"] .admin__field-label,
@@ -16,7 +18,9 @@
 
     fieldset[data-index="container_image"] > .admin__field-control,
     fieldset[data-index="container_text_or_html"] > .admin__field-control {padding: 20px;border: 1px solid #ccc;}
-    fieldset[data-index="container_text_or_html"] .admin__field-note {background-color: #fffbbb;padding: 10px;}
+    fieldset[data-index="container_shape"] .admin__field-note,
+    fieldset[data-index="container_text_or_html"] .admin__field-note
+    {background-color: #fffbbb;padding: 10px;}
 
     body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="pp_position"],
     body.use_the_same_label_for_product_page [data-index="product_page"] [data-index="container_text_or_html"],
