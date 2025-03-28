@@ -3,8 +3,14 @@
  * Copyright © Magefan (support@magefan.com). All rights reserved.
  * Please visit Magefan.com for license details (https://magefan.com/end-user-license-agreement).
  */
+
+/**
+ * @var $mfSecureRenderer \Magefan\Community\Api\SecureHtmlRendererInterface
+ * @var $escaper \Magento\Framework\Escaper
+ */
 ?>
-<script>
+
+<?php $script = "
     /* copy of Magefan_ProductLabel::js/label */
     var MagefanPL = {
         processConfigurableProductLabel: function (labelEl, maintProductID, selectedProductId, forProductPage = 0) {
@@ -15,7 +21,7 @@
             }
 
             if (!window.mfLabelProcessed[maintProductID]) {
-                const url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
+                const url = BASE_URL + 'mfpl/label/get?product_ids=' + maintProductID + '&get_children=1&product_page=' + forProductPage;
 
                 MagefanJs.ajax({'url':url, 'type': 'GET',
                     success:  function(response) {
@@ -61,7 +67,7 @@
     });
 
     window.addEventListener('listing-configurable-selection-changed', function (e) {
-        let labelEl = document.querySelector('input[name="product"][value="'+ e.detail.productId +'"]').closest('form').querySelector('.mf-label-container'),
+        let labelEl = document.querySelector('input[name=\"product\"][value=\"'+ e.detail.productId +'\"]').closest('form').querySelector('.mf-label-container'),
             forProductPage = 0;
 
         if (labelEl) {
@@ -74,4 +80,6 @@
         }
     });
 
-</script>
+ "; ?>
+
+<?= /* @noEscape */ $mfSecureRenderer->renderTag('script', [], $script, false) ?>
