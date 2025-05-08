@@ -55,8 +55,8 @@ class Rule extends \Magento\Framework\Model\AbstractModel implements RuleInterfa
         Context $context,
         Registry $registry,
         StoreManagerInterface $storeManager,
-        AbstractResource $resource = null,
-        AbstractDb $resourceCollection = null,
+        ?AbstractResource $resource = null,
+        ?AbstractDb $resourceCollection = null,
         array $data = []
     )
     {
