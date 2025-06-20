@@ -11,6 +11,7 @@ namespace Magefan\ProductLabel\Plugin\Frontend\Magento\Catalog\Block\Product\Vie
 use Magefan\ProductLabel\Model\Config;
 use Magefan\ProductLabel\Model\Parser\Html;
 use Magefan\Community\Api\HyvaThemeDetectionInterface;
+use Magefan\Community\Api\BreezeThemeDetectionInterface;
 
 class Gallery
 {
@@ -25,15 +26,23 @@ class Gallery
     protected $hyvaThemeDetection;
 
     /**
+     * @var BreezeThemeDetectionInterface
+     */
+    protected $breezeThemeDetection;
+
+    /**
      * @param Config $config
      * @param HyvaThemeDetectionInterface $hyvaThemeDetection
+     * @param BreezeThemeDetectionInterface $breezeThemeDetection
      */
     public function __construct(
         Config $config,
-        HyvaThemeDetectionInterface $hyvaThemeDetection
+        HyvaThemeDetectionInterface $hyvaThemeDetection,
+        BreezeThemeDetectionInterface $breezeThemeDetection
     ) {
         $this->config = $config;
         $this->hyvaThemeDetection = $hyvaThemeDetection;
+        $this->breezeThemeDetection = $breezeThemeDetection;
     }
 
     /**
@@ -46,7 +55,7 @@ class Gallery
         if ($this->config->isEnabled() && ($product = $subject->getProduct())) {
             $mfPlComment = Html::COMMENT_PREFIX_GALLERY . $product->getId() . Html::COMMENT_SUFFIX;
 
-            if ($this->hyvaThemeDetection->execute()) {
+            if ($this->hyvaThemeDetection->execute() || $this->breezeThemeDetection->execute()) {
                 $result = $this->addMfLabelContainerToImageWrapperTag($result, (int)$product->getId());
             } else {
                 if (strpos($result, '<img') !== false) {
