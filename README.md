@@ -30,7 +30,7 @@ No need to handle product labels in Magento manually. Just set up the rules once
   
 <a href="https://magefan.com/magento-2-product-labels/pricing">
           <img
-            src="https://cm.magefan.com/wysiwyg/products/magento-product-label-pricing.png"
+            src="https://cm.magefan.com/wysiwyg/products/product-label-pricing-plans.png"
             alt="Plans and Pricing for Magento 2 Product Labels Extension" />
         </a>
                 
