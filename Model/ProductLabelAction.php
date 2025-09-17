@@ -325,26 +325,24 @@ class ProductLabelAction
     private function getDefaultStoreIds($rule): array
     {
         $defaultStoreIds = [];
-
         $storeIds = (array)$rule->getStoreIds();
 
         // [website_id => default_store_id]
-        $websiteIdToDefaultStoreIdMap = $this->getWebsitesMap->execute();
+        $websiteToDefaultStoreMap = $this->getWebsitesMap->execute();
 
         if (in_array(0, $storeIds)) {
-            $defaultStoreIds = $websiteIdToDefaultStoreIdMap;
+            $defaultStoreIds = $websiteToDefaultStoreMap;
         } else {
             $storeManager = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Store\Model\StoreManagerInterface::class);
 
             foreach ($storeIds as $id) {
-
                 $websiteId = $storeManager->getStore($id)->getWebsiteId();
                 $websiteIds[$websiteId] = $websiteId;
             }
 
             foreach ($websiteIds as $websiteId) {
-                if (isset($websiteIdToDefaultStoreIdMap[$websiteId])) {
-                    $defaultStoreIds[] = $websiteIdToDefaultStoreIdMap[$websiteId];
+                if (isset($websiteToDefaultStoreMap[$websiteId])) {
+                    $defaultStoreIds[] = $websiteToDefaultStoreMap[$websiteId];
                 }
             }
         }
