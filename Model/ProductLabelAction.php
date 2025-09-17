@@ -235,18 +235,7 @@ class ProductLabelAction
         $conditions = $rule->getConditions();
 
         if (!empty($conditions['conditions'])) {
-            if ($rule->getWebsiteIds()) {
-                $storeIds = [];
-                $websites = $this->getWebsitesMap->execute();
-                foreach ($websites as $websiteId => $defaultStoreId) {
-                    if (in_array($websiteId, $rule->getWebsiteIds())) {
-                        $storeIds[] = $defaultStoreId;
-                    }
-                }
-            } else {
-                $storeIds = [0];
-            }
-
+            $storeIds = $this->getDefaultStoreIds($rule);
             $conditions = $rule->getConditions()->asArray();
 
             if ($this->validationFilter !== null) {
@@ -326,5 +315,40 @@ class ProductLabelAction
     protected function isRuleWilBeAppliedForSpecificProduct(array $params): bool
     {
         return $params && isset($params['rule_apply_type']) && ($params['rule_apply_type'] == ApplyByOptions::ON_PRODUCT_SAVE);
+    }
+
+    /**
+     * @param $rule
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getDefaultStoreIds($rule): array
+    {
+        $defaultStoreIds = [];
+
+        $storeIds = (array)$rule->getStoreIds();
+
+        // [website_id => default_store_id]
+        $websiteIdToDefaultStoreIdMap = $this->getWebsitesMap->execute();
+
+        if (in_array(0, $storeIds)) {
+            $defaultStoreIds = $websiteIdToDefaultStoreIdMap;
+        } else {
+            $storeManager = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Store\Model\StoreManagerInterface::class);
+
+            foreach ($storeIds as $id) {
+
+                $websiteId = $storeManager->getStore($id)->getWebsiteId();
+                $websiteIds[$websiteId] = $websiteId;
+            }
+
+            foreach ($websiteIds as $websiteId) {
+                if (isset($websiteIdToDefaultStoreIdMap[$websiteId])) {
+                    $defaultStoreIds[] = $websiteIdToDefaultStoreIdMap[$websiteId];
+                }
+            }
+        }
+
+        return $defaultStoreIds;
     }
 }
