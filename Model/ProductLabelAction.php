@@ -235,18 +235,7 @@ class ProductLabelAction
         $conditions = $rule->getConditions();
 
         if (!empty($conditions['conditions'])) {
-            if ($rule->getWebsiteIds()) {
-                $storeIds = [];
-                $websites = $this->getWebsitesMap->execute();
-                foreach ($websites as $websiteId => $defaultStoreId) {
-                    if (in_array($websiteId, $rule->getWebsiteIds())) {
-                        $storeIds[] = $defaultStoreId;
-                    }
-                }
-            } else {
-                $storeIds = [0];
-            }
-
+            $storeIds = [0];
             $conditions = $rule->getConditions()->asArray();
 
             if ($this->validationFilter !== null) {
