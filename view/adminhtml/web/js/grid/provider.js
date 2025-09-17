@@ -27,7 +27,6 @@ define([
             $.extend(this.params, conditions);
             
             $.extend(this.params, {
-                'website_ids' : $('[name=website_ids]').val(),
                 'catalog_price_rule_ids' : $('[name=catalog_price_rule_ids]').val(),
                 'apply_by' : $('[name=apply_by]').val(),
                 'display_on_parent' : $('[name=display_on_parent]').val()
