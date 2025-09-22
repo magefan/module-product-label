@@ -18,6 +18,7 @@ use Magefan\Community\Api\GetParentProductIdsInterface;
 use Magefan\Community\Api\GetWebsitesMapInterface;
 use Magento\Framework\Module\Manager as ModuleManager;
 use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
+use Magefan\ProductLabel\Model\Config\Source\RuleValidationScope;
 
 /**
  * Class ProductLabelAction
@@ -112,6 +113,7 @@ class ProductLabelAction
         GetParentProductIdsInterface $getParentProductIds,
         GetWebsitesMapInterface $getWebsitesMap,
         ModuleManager $moduleManager,
+        Config $config,
         $validationFilter = null
     ) {
         $this->ruleCollectionFactory = $ruleCollectionFactory;
@@ -123,6 +125,7 @@ class ProductLabelAction
         $this->sqlBuilder = $sqlBuilder;
         $this->getParentProductIds = $getParentProductIds;
         $this->getWebsitesMap = $getWebsitesMap;
+        $this->config = $config;
         $this->moduleManager = $moduleManager;
 
         if ($this->moduleManager->isEnabled('Magefan_DynamicProductAttributes')) {
@@ -235,7 +238,8 @@ class ProductLabelAction
         $conditions = $rule->getConditions();
 
         if (!empty($conditions['conditions'])) {
-            $storeIds = $this->getDefaultStoreIds($rule);
+            $storeIds = $this->getStoreIdsToValidate($rule);
+
             $conditions = $rule->getConditions()->asArray();
 
             if ($this->validationFilter !== null) {
@@ -319,10 +323,29 @@ class ProductLabelAction
 
     /**
      * @param $rule
+     * @return array|int[]
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getStoreIdsToValidate($rule): array
+    {
+        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_GLOBAL) {
+            return [0];
+        }
+
+        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_DEFAULT_STORE_VIEW_PER_WEBSITE) {
+            return $this->getDefaultStoreIdsPerWebsite($rule);
+        }
+
+        return (array)$rule->getStoreIds() ?: [0];
+    }
+
+
+    /**
+     * @param $rule
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getDefaultStoreIds($rule): array
+    private function getDefaultStoreIdsPerWebsite($rule): array
     {
         $defaultStoreIds = [];
         $storeIds = (array)$rule->getStoreIds();

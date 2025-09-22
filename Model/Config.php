@@ -48,6 +48,8 @@ class Config
 
     const XML_PATH_CUSTOM_POSITIONS = 'mfproductlabel/general/custom_positions';
 
+    const XML_PATH_RULE_VALIDATION_SCOPE = 'mfproductlabel/general/rule_validation_scope';
+
     const SPLITTERS_FOR_CUSTOM_POSITIONS = '<!--mfcp_splitter--!>';
 
     /**
@@ -137,5 +139,13 @@ class Config
         }
 
         return $this->customPositions;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRuleValidationScope(): int
+    {
+        return (int)$this->scopeConfig->getValue(self::XML_PATH_RULE_VALIDATION_SCOPE);
     }
 }

@@ -56,6 +56,22 @@
                         These positions will be available in the rule, when you choose position "Custom". There you can select the position from this list.
                         ]]></comment>
                 </field>
+
+                <field id="rule_validation_scope" translate="label" type="select" sortOrder="80" showInDefault="1" showInWebsite="0" showInStore="0" canRestore="1">
+                    <label>Rule Validation Scope</label>
+                    <source_model>Magefan\ProductLabel\Model\Config\Source\RuleValidationScope</source_model>
+
+                    <comment>
+                        <![CDATA[
+        <p>This setting determines how product conditions are validated for product labels.</p>
+        <ul>
+            <li><b>Global (Default):</b> Conditions are validated against the product's global attributes.</li>
+            <li><b>Default Store View(s) per Website:</b> Conditions are validated using product data from the default store view of each website. This is useful for displaying different labels based on website-specific pricing or stock.</li>
+            <li><b>Selected Store View(s) per Rule:</b> This allows you to define a specific store view for condition validation, offering the most granular control. <b>Warning: This option can be resource-intensive and may impact performance.</b></li>
+        </ul>
+        ]]>
+                    </comment>
+                </field>
             </group>
         </section>
     </system>
