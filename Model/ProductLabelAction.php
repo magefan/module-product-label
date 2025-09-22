@@ -19,6 +19,7 @@ use Magefan\Community\Api\GetWebsitesMapInterface;
 use Magento\Framework\Module\Manager as ModuleManager;
 use Magefan\ProductLabel\Model\Config\Source\ApplyByOptions;
 use Magefan\ProductLabel\Model\Config\Source\RuleValidationScope;
+use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class ProductLabelAction
@@ -56,7 +57,7 @@ class ProductLabelAction
     private $connection;
 
     /**
-     * @var \Magefan\ProductLabel\Model\Config
+     * @var Config
      */
     protected $config;
 
@@ -86,12 +87,18 @@ class ProductLabelAction
     private $moduleManager;
 
     /**
+     * @var StoreManagerInterface
+     */
+    private $storeManager;
+
+    /**
      * @var null
      */
     private $validationFilter = null;
 
+    private $allStoreIds = null;
+
     /**
-     * ProductLabelAction constructor.
      * @param RuleCollectionFactory $ruleCollectionFactory
      * @param ProductCollectionFactory $productCollectionFactory
      * @param CatalogRuleFactory $catalogRuleFactory
@@ -101,7 +108,9 @@ class ProductLabelAction
      * @param GetParentProductIdsInterface $getParentProductIds
      * @param GetWebsitesMapInterface $getWebsitesMap
      * @param ModuleManager $moduleManager
-     * @param null $validationFilter
+     * @param Config $config
+     * @param StoreManagerInterface $storeManager
+     * @param $validationFilter
      */
     public function __construct(
         RuleCollectionFactory $ruleCollectionFactory,
@@ -114,6 +123,7 @@ class ProductLabelAction
         GetWebsitesMapInterface $getWebsitesMap,
         ModuleManager $moduleManager,
         Config $config,
+        StoreManagerInterface $storeManager,
         $validationFilter = null
     ) {
         $this->ruleCollectionFactory = $ruleCollectionFactory;
@@ -126,6 +136,7 @@ class ProductLabelAction
         $this->getParentProductIds = $getParentProductIds;
         $this->getWebsitesMap = $getWebsitesMap;
         $this->config = $config;
+        $this->storeManager = $storeManager;
         $this->moduleManager = $moduleManager;
 
         if ($this->moduleManager->isEnabled('Magefan_DynamicProductAttributes')) {
@@ -328,15 +339,21 @@ class ProductLabelAction
      */
     private function getStoreIdsToValidate($rule): array
     {
-        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_GLOBAL) {
-            return [0];
+        $storeIds = [0];
+
+        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_DEFAULT_STORE_VIEWS_PER_WEBSITE) {
+            $storeIds = $this->getDefaultStoreIdsPerWebsite($rule);
         }
 
-        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_DEFAULT_STORE_VIEW_PER_WEBSITE) {
-            return $this->getDefaultStoreIdsPerWebsite($rule);
+        if ($this->config->getRuleValidationScope() === RuleValidationScope::SCOPE_SELECTED_STORE_VIEWS_PER_RULE) {
+            $storeIds = (array)$rule->getStoreIds();
+
+            if (empty($storeIds) || in_array(0, $storeIds)) {
+                $storeIds = $this->getAllStoreIds();
+            }
         }
 
-        return (array)$rule->getStoreIds() ?: [0];
+        return $storeIds;
     }
 
 
@@ -356,10 +373,8 @@ class ProductLabelAction
         if (in_array(0, $storeIds)) {
             $defaultStoreIds = $websiteToDefaultStoreMap;
         } else {
-            $storeManager = \Magento\Framework\App\ObjectManager::getInstance()->get(\Magento\Store\Model\StoreManagerInterface::class);
-
             foreach ($storeIds as $id) {
-                $websiteId = $storeManager->getStore($id)->getWebsiteId();
+                $websiteId = $this->storeManager->getStore($id)->getWebsiteId();
                 $websiteIds[$websiteId] = $websiteId;
             }
 
@@ -371,5 +386,20 @@ class ProductLabelAction
         }
 
         return $defaultStoreIds;
+    }
+
+    /**
+     * @return array
+     */
+    private function getAllStoreIds()
+    {
+        if (null === $this->allStoreIds) {
+            $this->allStoreIds = [];
+
+            foreach ($this->storeManager->getStores() as $store) {
+                $this->allStoreIds[] = $store->getId();
+            }
+        }
+        return $this->allStoreIds;
     }
 }
