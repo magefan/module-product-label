@@ -25,12 +25,12 @@ class ActionInterface
     protected $config;
 
     /**
-     * @var RequestInterface 
+     * @var RequestInterface
      */
     private $request;
 
     /**
-     * @var ResponseInterface 
+     * @var ResponseInterface
      */
     private $response;
 
@@ -55,42 +55,75 @@ class ActionInterface
 
     /**
      * @param $subject
-     * @param $response
+     * @param $result
      * @return mixed
      */
-    public function afterExecute($subject, $response)
+    public function afterExecute($subject, $result)
     {
-        if (!$this->canProcess($response)) {
-            return $response;
+        if (!$this->request->isAjax() || !$this->config->isEnabled()) {
+            return $result;
         }
 
+        $response = $result ?: ($subject->getResponse() ?? null);
 
+        if (!is_object($response) || !method_exists($response, 'getBody')) {
+            return $result;
+        }
 
-        $html = $response->getBody();
+        $body = (string) $response->getBody();
 
-        if (
-            $html
-            && (
-                false !== strpos($html, Html::COMMENT_PREFIX) ||
-                false !== strpos($html, Html::COMMENT_PREFIX_GALLERY)
-            )
-        ) {
+        if ($this->looksLikeJson($body)) {
+            $decoded = json_decode($body, true);
 
-            $response->setBody($this->htmlParser->execute($html));
+            if (is_array($decoded) && isset($decoded['products']) && is_string($decoded['products'])) {
+                $html = $decoded['products'];
+
+                if ($this->containsMarkers($html)) {
+                    $decoded['products'] = $this->htmlParser->execute($html);
+                    $newBody = json_encode($decoded, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+                    if (method_exists($response, 'setBody')) {
+                        $response->setBody($newBody);
+                        return $response;
+                    }
+
+                    return $newBody;
+                }
+            }
+
+            return $result;
+        }
+
+        // If not JSON, treat as HTML
+        if ($this->containsMarkers($body) && method_exists($response, 'setBody')) {
+            $response->setBody($this->htmlParser->execute($body));
         }
 
         return $response;
     }
 
     /**
+     * @param string $body
      * @return bool
      */
-    private function canProcess($response): bool
+    private function looksLikeJson(string $body): bool
     {
+        $trim = ltrim($body);
+        return (strlen($trim) > 0 && ($trim[0] === '{' || $trim[0] === '[')) && (false !== strpos($body, '"products"') || false !== strpos($body, 'products'));
+    }
+    
+    /**
+     * @param string|null $html
+     * @return bool
+     */
+    private function containsMarkers(?string $html): bool
+    {
+        if ($html === null || $html === '') {
+            return false;
+        }
+
         return
-            $this->request->isAjax()
-            && $this->config->isEnabled()
-            && is_object($response)
-            && get_class($response) == 'Magento\Framework\App\Response\Http\Interceptor';
+            (false !== strpos($html, Html::COMMENT_PREFIX)) ||
+            (false !== strpos($html, Html::COMMENT_PREFIX_GALLERY));
     }
 }
