@@ -7,12 +7,18 @@
 <?php
 /** @var $block \Magefan\ProductLabel\Block\LabelCss */
 /** @var \Magefan\Community\Api\HyvaThemeDetectionInterface $mfHyvaThemeDetection */
+/** @var \Magefan\Community\Api\BreezeThemeDetectionInterface $mfBreezeThemeDetection */
+
 ?>
 
 <style>
     /*.mf-label-container {display: block;top:0;right: 0;left: 0;bottom: 0; width: 100%; height: 100%}*/
     .mf-label-container .mf-label {position: absolute; z-index: 9; width: fit-content;}
     .mf-label-container .mf-label.mf-label-position-top-left {top: 0;left: 0;}
+
+    <?php if ($mfBreezeThemeDetection->execute()) { ?>
+    .form-cart .product-image-container {position: relative;}
+     <?php } ?>                                            
 
     <?php if ($mfHyvaThemeDetection->execute()) { ?>
     .product-item-photo {position: relative;}
