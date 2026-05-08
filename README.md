@@ -9,39 +9,47 @@
 
 No need to handle product labels in Magento manually. Just set up the rules once and the extension will display them dynamically across your website pages.
 
-<img  align="right" width="120" height="70" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg">
+> **Note:** Best for both medium and enterprise stores that want to automate Magento 2 product badges and highlight products with attention-grabbing labels though rules.
 
+Compatibility: Magento 2.3.0 - 2.4.x (CE, EE, ECE, B2B)
 
+<a href="https://magefan.com/blog/join-our-donations"><img align="right" width="120" height="70" src="https://magefan.com/media/wysiwyg/made_in_ukraine.jpg"></a>
 <a href="https://magefan.com/magento-2-product-labels"><img width="190" height="70" src="https://cm.magefan.com/wysiwyg/products/download-magefan-extensions.png"></a>
 
-## Useful Links
-  * [User Guide](https://magefan.com/magento-2-product-labels/documentation)
-  * [Change Log](https://magefan.com/magento-2-product-labels/change-log)
-  * [FAQs](https://magefan.com/magento-2-product-labels#pattr-faq)
+---
+TL;DR:
+Magefan Product Labels for Magento helps merchants display custom product labels such as “Sale”, “New”, “Hot”, or discount badges automatically based on flexible conditions (product, category, page, cart attributes. It helps you improve product visibility, promote special offers, and increase conversions with dynamic labels across catalog and product pages.
 
-## 🇺🇦 Stand with Ukraine! [How can you help?](https://magefan.com/blog/join-our-donations)
+## Why Do You Need Magento 2 Product Labels Extension?
+As a Magento 2 store owner, you might have noticed that simply listing products isn’t enough anymore. You need visual triggers to catch customers’ attention and guide buying decisions.
 
-## Requirements
-  * Magento Community 2.2.0-2.4.x (CE, EE, ECE, B2B)
-  * [Magefan Community Extension](https://github.com/magefan/module-community) >= v2.1.14. Please install this extension first if you use installation via FTP.
-  * **Note** that extension is free only for the Magento Community (Open Source) Edition. For Magento EE, ECE, B2B you need to purchase the license at magefan.com.
+The Magefan Magento 2 Product Labels extension helps you do exactly that. It turns ordinary product listings into high-converting offers. Using this extension, you can:
 
-## Editions & Pricing
+* Increase CTR and conversions with eye-catching badges
+* Highlight key offers instantly 
+* Improve user experience with visual cues
+
+Instead of manually managing product badges, you can use flexible rules and display conditions, and let the extension handle everything dynamically across your store.
+
+## Features of Magento 2 Product Labels Extension
+* Create text, image, or shape-based labels.
+* Choose the product label position or define a custom one.
+* Display labels dynamically based on rules and conditions.
+* Use dynamic variables in the text-based labels.
+* Show labels for specific customer groups.
+* Preview labels before publishing them.
+* Use dynamic attributes (rating score, review count, best sellers, etc.) for a more advanced setup.
+
+## Pricing of the Magento 2 Product Labels Extension
+Magento 2 Product Labels Extension is available in three plans designed for different needs and store sizes. The plan differs based on the types of labels available, display conditions, product badge positions, and page placements. 
   
 <a href="https://magefan.com/magento-2-product-labels/pricing">
           <img
             src="https://cm.magefan.com/wysiwyg/products/product-label-pricing-plans.png"
             alt="Plans and Pricing for Magento 2 Product Labels Extension" />
         </a>
-                
-## Benefits
-* [Create Text-, Shape- and Image-Based Product Labels in Magento](https://github.com/magefan/module-product-label#create-text--shape--and-image-based-product-labels-in-magento)
-* [Use Ready-Made Product Labels Library](https://github.com/magefan/module-product-label#use-ready-made-product-labels-library)
-* [Use Conditions to Display Product Labels](https://github.com/magefan/module-product-label#use-conditions-to-display-product-labels)
-* [Show Multiple Labels per One Product](https://github.com/magefan/module-product-label#show-multiple-labels-per-one-product)
-* [Create Product Labels for Separate Customer Groups](https://github.com/magefan/module-product-label#create-product-labels-for-separate-customer-groups)
-
-## Features
+               
+## FBenefits of the Dynamic Product Labels in Magento
 
 ### Create Text-, Shape- and Image-Based Product Labels in Magento
 
@@ -100,6 +108,25 @@ You can create product labels for each customer group. Offer higher discounts fo
 <p align="center">
   <img width="853" height="425" src="https://cm.magefan.com/wysiwyg/product-labels-based-on-product-rules_1.png">
 </p>
+
+## Frequently Asked Questions
+
+### How to add product labels in Magento 2?
+To add product labels in Mageno 2, go to your admin panel > Marketing > Product Label > Rules, press the Add New Rule button, and create your label. Once ready, save and apply the rule to see changes on the storefront.
+
+### Can I display product labels automatically?
+Yes. This extension allows you to create rule-based conditions so labels are applied automatically based on attributes like price, stock, product rating, best sellers, etc. You can also schedule the product label display so that they are added and removed automatically.
+
+### Is it possible to add more attributes to the product label conditions?
+Yes. For that, navigate to Stores > Attributes > Product, open the attribute you’d like to use in conditions, switch to the Storefront Properties tab, and set Yes in the Use for Promo Rule Conditions option.
+
+### Can I display multiple labels on one product?
+Yes. You can assign multiple labels per product and combine different marketing messages (e.g., discount + bestseller).
+
+
+## Requirements
+  * [Magefan Community Extension](https://github.com/magefan/module-community) >= v2.1.14. Please install this extension first if you use installation via FTP.
+  * **Note** that extension is free only for the Magento Community (Open Source) Edition. For Magento EE, ECE, B2B you need to purchase the license at magefan.com.
 
 ## Demo
 
@@ -162,11 +189,11 @@ https://magefan.com/contact
 ## License
 The code is licensed under [EULA](https://magefan.com/end-user-license-agreement).
 
-## [Magento Extensions](https://magefan.com/magento-2-extensions) by Magefan
+## [Magento 2 Extensions](https://magefan.com/magento-2-extensions) by Magefan
 
 ### Magento 2 SEO Extensions
 
-* [Magento SEO](https://magefan.com/magento-2-seo-extension)
+* [Magento 2 SEO Extension](https://magefan.com/magento-2-seo-extension)
 * [Magento 2 Rich Snippets](https://magefan.com/magento-2-rich-snippets)
 * [Magento 2 HTML Sitemap](https://magefan.com/magento-2-html-sitemap-extension)
 * [Magento 2 XML Sitemap](https://magefan.com/magento-2-xml-sitemap-extension)
