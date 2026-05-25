@@ -16,7 +16,7 @@ var MagefanPL = {
 
             MagefanJs.ajax({'url':url, 'type': 'GET',
                 success:  function(response) {
-                    response = JSON.parse(response)
+                    response = JSON.parse(response);
                     window.mfLabelProcessed[maintProductID] = response.labels;
                     self.replaceLabel(labelEl, maintProductID, selectedProductId)
                 }
