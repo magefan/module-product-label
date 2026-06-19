@@ -89,7 +89,7 @@ if ($getModuleVersion->execute('Magefan_ProductLabelExtra')) {
         showAlert: function (extensionPlan) {
             require(['jquery', 'Magento_Ui/js/modal/alert'], function($, alert) {
                 alert({
-                    title: 'You cannot use this option.',
+                    title: 'Upgrade to use this option.',
                     content: 'This feature is available in <strong>' + extensionPlan + '</strong> plan only.',
                     buttons: [{
                         text: 'Upgrade Plan Now',
