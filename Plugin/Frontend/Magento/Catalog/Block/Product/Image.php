@@ -45,8 +45,13 @@ class Image
     private function addMfLabelContainerToImageWrapperTag(string $html, int $productId): string
     {
         $wrapperClass = ltrim($this->config->getProductListContainerSelector(), '.');
+        $imgTagPosition = false;
 
-        $imgTagPosition = strpos($html, '<img ');
+        // \s matches spaces, tabs, and newlines.
+        // The 'i' modifier at the end makes it case-insensitive (<IMG or <img).
+        if (preg_match('/<img\s/i', $html, $matches, PREG_OFFSET_CAPTURE)) {
+            $imgTagPosition = $matches[0][1];
+        }
 
         if ($imgTagPosition !== false) {
             $wrapperClassPosition = strpos($html, $wrapperClass);
