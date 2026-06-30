@@ -18,11 +18,11 @@ var MagefanPL = {
                 success:  function(response) {
                     response = JSON.parse(response);
                     window.mfLabelProcessed[maintProductID] = response.labels;
-                    self.replaceLabel(labelEl, maintProductID, selectedProductId)
+                    self.replaceLabel(labelEl, maintProductID, selectedProductId);
                 }
             });
         } else {
-            self.replaceLabel(labelEl, maintProductID, selectedProductId)
+            self.replaceLabel(labelEl, maintProductID, selectedProductId);
         }
     },
 
