@@ -90,7 +90,7 @@ class Save extends Rule
 
                         $model->setData($key, $image);
                     } else {
-                        if (isset($data[$key][0]['url']) && false !== strpos($data[$key][0]['url'], '/media/')) {
+                        if (isset($data[$key][0]['url']) && (false !== strpos($data[$key][0]['url'], '/media/') || false !== strpos($data[$key][0]['url'], '/.renditions/'))) {
                             $url = $data[$key][0]['url'];
 
                             /**
