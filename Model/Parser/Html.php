@@ -50,15 +50,24 @@ class Html
 
         $replaceMap = $this->getLabels->execute($productIds, $productIdsForProductPage);
 
+        $replacePairs = [];
+
         foreach ($replaceMap as $productId => $replace) {
-            $replace = $isOutputIsJson ? trim(json_encode($replace),'"') : $replace;
+            $replace = $isOutputIsJson ? trim(json_encode($replace), '"') : $replace;
 
             // should be above regular replace
             $this->replaceForCustomPosition($output, $replace, $productId);
 
-            $output = ($currentPageProductId && $currentPageProductId == $productId)
-                ? str_replace(self::COMMENT_PREFIX_GALLERY . $productId . self::COMMENT_SUFFIX, $replace, $output)
-                : str_replace(self::COMMENT_PREFIX         . $productId . self::COMMENT_SUFFIX, $replace, $output);
+            $search = ($currentPageProductId && $currentPageProductId == $productId)
+                ? self::COMMENT_PREFIX_GALLERY . $productId . self::COMMENT_SUFFIX
+                : self::COMMENT_PREFIX . $productId . self::COMMENT_SUFFIX;
+
+            $replacePairs[$search] = $replace;
+        }
+
+        // Single-pass replacement over the entire $output string
+        if (!empty($replacePairs)) {
+            $output = strtr($output, $replacePairs);
         }
 
         return $output;
