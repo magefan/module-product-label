@@ -152,6 +152,7 @@ class ProductLabelAction
     {
         $connection = $this->resourceConnection->getConnection();
         $tableName = $this->resourceConnection->getTableName('magefan_product_label_rule_product');
+        $ruleTableName = $this->resourceConnection->getTableName('magefan_product_label_rule');
 
         $productIdsToCleanCache = [];
         $oldProductToRuleData = [];
@@ -170,6 +171,14 @@ class ProductLabelAction
                     ->from($tableName);
 
                 $oldProductToRuleCollection = $this->connection->fetchAll($select);
+
+                // Remove rows of rules that are no longer active. Their products were
+                // already fetched above, so the cache is cleaned for them once at the
+                // end of this method and not again on every future cron run.
+                $activeRuleIdsSelect = $this->connection->select()
+                    ->from($ruleTableName, 'id')
+                    ->where('status = ?', 1);
+                $connection->delete($tableName, 'rule_id NOT IN (' . $activeRuleIdsSelect . ')');
 
                 foreach ($oldProductToRuleCollection as $value) {
                     $oldProductToRuleData[$value['rule_id'] . '_' . $value['product_id']] = $value['product_id'];
