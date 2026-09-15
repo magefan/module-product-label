@@ -30,7 +30,7 @@
                 <field id="pp_selector" translate="css class parent label container" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Product Page Label Container</label>
                     <comment><![CDATA[
-                        Selector for Container <span class="hyva">[For Hyva Theme use: "relative self-center w-full"]</span>
+                        Selector for Container <span class="hyva">[For Hyva Theme use: "relative self-center w-full" or "relative shrink-0 w-full"]</span>
                        ]]>
                     </comment>
                 </field>
