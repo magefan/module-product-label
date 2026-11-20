@@ -210,18 +210,23 @@ class ProductLabelAction
                 $data = [];
                 $deleteCondition = ['rule_id = ?' => $ruleId];
                 $ruleParams = $params;
-                $scopeIds = [];
+                // Product ids whose rows of the rule are replaced; null - all rows of the rule
+                $productIdsToUpdate = null;
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
-                    [$scopeIds, $ruleParams['product_id']] = $this->getProductIdsForProductSave($rule, (int)$params['product_id']);
-                    $deleteCondition['product_id IN (?)'] = $scopeIds;
-                    $productIdsToCleanCache += array_combine($scopeIds, $scopeIds);
+                    [$productIdsToUpdate, $productIdsToValidate] =
+                        $this->getProductIdsForProductSave($rule, (int)$params['product_id']);
+
+                    $ruleParams['product_id'] = $productIdsToValidate;
+                    $deleteCondition['product_id IN (?)'] = $productIdsToUpdate;
+                    $productIdsToCleanCache += array_combine($productIdsToUpdate, $productIdsToUpdate);
                 }
 
                 $productsIdsFromRule = $this->getListProductIds($rule, $ruleParams);
 
-                if ($scopeIds) {
-                    $productsIdsFromRule = array_intersect($productsIdsFromRule, $scopeIds);
+                if (null !== $productIdsToUpdate) {
+                    // Other children were validated only to decide on the parent label, keep their rows as is
+                    $productsIdsFromRule = array_intersect($productsIdsFromRule, $productIdsToUpdate);
                 }
 
                 foreach ($productsIdsFromRule as $productId) {
@@ -347,13 +352,15 @@ class ProductLabelAction
     }
 
     /**
-     * Product ids to update after the product save, and product ids to validate for them.
-     * With "Display on parent" the parents are updated too, and a parent gets the label
-     * if any of its children matches, so all children of the parents are validated.
+     * Product ids for applying the rule on the product save.
+     *
+     * Without "Display on parent": update and validate only the saved product.
+     * With "Display on parent": update the saved product and its parents. A parent gets the label
+     * if it or any of its children matches the rule, so validate all children of these products too.
      *
      * @param $rule
-     * @param int $productId
-     * @return array [int[] $idsToUpdate, int[] $idsToValidate]
+     * @param int $productId saved product id
+     * @return array [int[] $productIdsToUpdate, int[] $productIdsToValidate]
      */
     private function getProductIdsForProductSave($rule, int $productId): array
     {
@@ -361,22 +368,22 @@ class ProductLabelAction
             return [[$productId], [$productId]];
         }
 
-        $idsToUpdate = array_map('intval', $this->getParentProductIds->execute([$productId]));
-        $idsToUpdate[] = $productId;
+        $parentIds = array_map('intval', $this->getParentProductIds->execute([$productId]));
+        $productIdsToUpdate = array_values(array_unique(array_merge([$productId], $parentIds)));
 
         $productTable = $this->resourceConnection->getTableName('catalog_product_entity');
         $linkField = $this->connection->tableColumnExists($productTable, 'row_id') ? 'row_id' : 'entity_id';
 
-        $childIds = $this->connection->fetchCol(
+        $childIds = array_map('intval', $this->connection->fetchCol(
             $this->connection->select()
                 ->from(['r' => $this->resourceConnection->getTableName('catalog_product_relation')], ['child_id'])
                 ->join(['e' => $productTable], 'e.' . $linkField . ' = r.parent_id', [])
-                ->where('e.entity_id IN (?)', $idsToUpdate)
-        );
+                ->where('e.entity_id IN (?)', $productIdsToUpdate)
+        ));
 
-        $idsToUpdate = array_values(array_unique($idsToUpdate));
+        $productIdsToValidate = array_values(array_unique(array_merge($productIdsToUpdate, $childIds)));
 
-        return [$idsToUpdate, array_unique(array_merge($idsToUpdate, array_map('intval', $childIds)))];
+        return [$productIdsToUpdate, $productIdsToValidate];
     }
 
     /**
