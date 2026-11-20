@@ -209,15 +209,25 @@ class ProductLabelAction
 
                 $data = [];
                 $deleteCondition = ['rule_id = ?' => $ruleId];
+                $ruleParams = $params;
+                // Product ids whose rows of the rule are replaced; null - all rows of the rule
+                $productIdsToUpdate = null;
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
-                    $deleteCondition['product_id = ?'] = (int)$params['product_id'];
-                    $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
+                    [$productIdsToUpdate, $productIdsToValidate] =
+                        $this->getProductIdsForProductSave($rule, (int)$params['product_id']);
+
+                    $ruleParams['product_id'] = $productIdsToValidate;
+                    $deleteCondition['product_id IN (?)'] = $productIdsToUpdate;
+                    $productIdsToCleanCache += array_combine($productIdsToUpdate, $productIdsToUpdate);
                 }
 
-                $connection->delete($tableName, $deleteCondition);
+                $productsIdsFromRule = $this->getListProductIds($rule, $ruleParams);
 
-                $productsIdsFromRule = $this->getListProductIds($rule, $params);
+                if (null !== $productIdsToUpdate) {
+                    // Other children were validated only to decide on the parent label, keep their rows as is
+                    $productsIdsFromRule = array_intersect($productsIdsFromRule, $productIdsToUpdate);
+                }
 
                 foreach ($productsIdsFromRule as $productId) {
                     $data[] = [
@@ -232,8 +242,17 @@ class ProductLabelAction
                     }
                 }
 
-                if ($data) {
-                    $connection->insertMultiple($tableName, $data);
+                // Replace rule rows atomically, so the frontend never sees the rule without products
+                $connection->beginTransaction();
+                try {
+                    $connection->delete($tableName, $deleteCondition);
+                    if ($data) {
+                        $connection->insertMultiple($tableName, $data);
+                    }
+                    $connection->commit();
+                } catch (\Exception $e) {
+                    $connection->rollBack();
+                    throw $e;
                 }
             }
         }
@@ -278,7 +297,7 @@ class ProductLabelAction
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
                     $productCollection
-                        ->addFieldToFilter('entity_id', $params['product_id']);
+                        ->addFieldToFilter('entity_id', ['in' => (array)$params['product_id']]);
                 }
 
                 $conditions = $rule->getConditions();
@@ -330,6 +349,41 @@ class ProductLabelAction
         }
 
         return true;
+    }
+
+    /**
+     * Product ids for applying the rule on the product save.
+     *
+     * Without "Display on parent": update and validate only the saved product.
+     * With "Display on parent": update the saved product and its parents. A parent gets the label
+     * if it or any of its children matches the rule, so validate all children of these products too.
+     *
+     * @param $rule
+     * @param int $productId saved product id
+     * @return array [int[] $productIdsToUpdate, int[] $productIdsToValidate]
+     */
+    private function getProductIdsForProductSave($rule, int $productId): array
+    {
+        if (!$rule->getDisplayOnParent()) {
+            return [[$productId], [$productId]];
+        }
+
+        $parentIds = array_map('intval', $this->getParentProductIds->execute([$productId]));
+        $productIdsToUpdate = array_values(array_unique(array_merge([$productId], $parentIds)));
+
+        $productTable = $this->resourceConnection->getTableName('catalog_product_entity');
+        $linkField = $this->connection->tableColumnExists($productTable, 'row_id') ? 'row_id' : 'entity_id';
+
+        $childIds = array_map('intval', $this->connection->fetchCol(
+            $this->connection->select()
+                ->from(['r' => $this->resourceConnection->getTableName('catalog_product_relation')], ['child_id'])
+                ->join(['e' => $productTable], 'e.' . $linkField . ' = r.parent_id', [])
+                ->where('e.entity_id IN (?)', $productIdsToUpdate)
+        ));
+
+        $productIdsToValidate = array_values(array_unique(array_merge($productIdsToUpdate, $childIds)));
+
+        return [$productIdsToUpdate, $productIdsToValidate];
     }
 
     /**
