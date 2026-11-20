@@ -215,8 +215,6 @@ class ProductLabelAction
                     $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
                 }
 
-                $connection->delete($tableName, $deleteCondition);
-
                 $productsIdsFromRule = $this->getListProductIds($rule, $params);
 
                 foreach ($productsIdsFromRule as $productId) {
@@ -232,8 +230,17 @@ class ProductLabelAction
                     }
                 }
 
-                if ($data) {
-                    $connection->insertMultiple($tableName, $data);
+                // Replace rule rows atomically, so the frontend never sees the rule without products
+                $connection->beginTransaction();
+                try {
+                    $connection->delete($tableName, $deleteCondition);
+                    if ($data) {
+                        $connection->insertMultiple($tableName, $data);
+                    }
+                    $connection->commit();
+                } catch (\Exception $e) {
+                    $connection->rollBack();
+                    throw $e;
                 }
             }
         }
