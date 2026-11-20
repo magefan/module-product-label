@@ -213,23 +213,9 @@ class ProductLabelAction
                 $scopeIds = [];
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
-                    // Rows that can change after the product save: the product and, with "Display on parent", its parents
-                    $scopeIds = [(int)$params['product_id']];
-
-                    if ($rule->getDisplayOnParent()) {
-                        $scopeIds = array_unique(array_merge(
-                            $scopeIds,
-                            array_map('intval', $this->getParentProductIds->execute($scopeIds))
-                        ));
-                        // A parent gets the label if any of its children matches, so validate all children too
-                        $ruleParams['product_id'] = array_unique(array_merge($scopeIds, $this->getChildProductIds($scopeIds)));
-                    }
-
+                    [$scopeIds, $ruleParams['product_id']] = $this->getProductIdsForProductSave($rule, (int)$params['product_id']);
                     $deleteCondition['product_id IN (?)'] = $scopeIds;
-
-                    foreach ($scopeIds as $scopeId) {
-                        $productIdsToCleanCache[$scopeId] = $scopeId;
-                    }
+                    $productIdsToCleanCache += array_combine($scopeIds, $scopeIds);
                 }
 
                 $productsIdsFromRule = $this->getListProductIds($rule, $ruleParams);
@@ -361,20 +347,36 @@ class ProductLabelAction
     }
 
     /**
-     * @param array $parentIds
-     * @return array
+     * Product ids to update after the product save, and product ids to validate for them.
+     * With "Display on parent" the parents are updated too, and a parent gets the label
+     * if any of its children matches, so all children of the parents are validated.
+     *
+     * @param $rule
+     * @param int $productId
+     * @return array [int[] $idsToUpdate, int[] $idsToValidate]
      */
-    private function getChildProductIds(array $parentIds): array
+    private function getProductIdsForProductSave($rule, int $productId): array
     {
+        if (!$rule->getDisplayOnParent()) {
+            return [[$productId], [$productId]];
+        }
+
+        $idsToUpdate = array_map('intval', $this->getParentProductIds->execute([$productId]));
+        $idsToUpdate[] = $productId;
+
         $productTable = $this->resourceConnection->getTableName('catalog_product_entity');
         $linkField = $this->connection->tableColumnExists($productTable, 'row_id') ? 'row_id' : 'entity_id';
 
-        $select = $this->connection->select()
-            ->from(['r' => $this->resourceConnection->getTableName('catalog_product_relation')], ['child_id'])
-            ->join(['e' => $productTable], 'e.' . $linkField . ' = r.parent_id', [])
-            ->where('e.entity_id IN (?)', $parentIds);
+        $childIds = $this->connection->fetchCol(
+            $this->connection->select()
+                ->from(['r' => $this->resourceConnection->getTableName('catalog_product_relation')], ['child_id'])
+                ->join(['e' => $productTable], 'e.' . $linkField . ' = r.parent_id', [])
+                ->where('e.entity_id IN (?)', $idsToUpdate)
+        );
 
-        return array_map('intval', $this->connection->fetchCol($select));
+        $idsToUpdate = array_values(array_unique($idsToUpdate));
+
+        return [$idsToUpdate, array_unique(array_merge($idsToUpdate, array_map('intval', $childIds)))];
     }
 
     /**
