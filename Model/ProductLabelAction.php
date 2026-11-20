@@ -209,13 +209,34 @@ class ProductLabelAction
 
                 $data = [];
                 $deleteCondition = ['rule_id = ?' => $ruleId];
+                $ruleParams = $params;
+                $scopeIds = [];
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
-                    $deleteCondition['product_id = ?'] = (int)$params['product_id'];
-                    $productIdsToCleanCache[(int)$params['product_id']] = (int)$params['product_id'];
+                    // Rows that can change after the product save: the product and, with "Display on parent", its parents
+                    $scopeIds = [(int)$params['product_id']];
+
+                    if ($rule->getDisplayOnParent()) {
+                        $scopeIds = array_unique(array_merge(
+                            $scopeIds,
+                            array_map('intval', $this->getParentProductIds->execute($scopeIds))
+                        ));
+                        // A parent gets the label if any of its children matches, so validate all children too
+                        $ruleParams['product_id'] = array_unique(array_merge($scopeIds, $this->getChildProductIds($scopeIds)));
+                    }
+
+                    $deleteCondition['product_id IN (?)'] = $scopeIds;
+
+                    foreach ($scopeIds as $scopeId) {
+                        $productIdsToCleanCache[$scopeId] = $scopeId;
+                    }
                 }
 
-                $productsIdsFromRule = $this->getListProductIds($rule, $params);
+                $productsIdsFromRule = $this->getListProductIds($rule, $ruleParams);
+
+                if ($scopeIds) {
+                    $productsIdsFromRule = array_intersect($productsIdsFromRule, $scopeIds);
+                }
 
                 foreach ($productsIdsFromRule as $productId) {
                     $data[] = [
@@ -285,7 +306,7 @@ class ProductLabelAction
 
                 if ($this->isRuleWilBeAppliedForSpecificProduct($params)) {
                     $productCollection
-                        ->addFieldToFilter('entity_id', $params['product_id']);
+                        ->addFieldToFilter('entity_id', ['in' => (array)$params['product_id']]);
                 }
 
                 $conditions = $rule->getConditions();
@@ -337,6 +358,23 @@ class ProductLabelAction
         }
 
         return true;
+    }
+
+    /**
+     * @param array $parentIds
+     * @return array
+     */
+    private function getChildProductIds(array $parentIds): array
+    {
+        $productTable = $this->resourceConnection->getTableName('catalog_product_entity');
+        $linkField = $this->connection->tableColumnExists($productTable, 'row_id') ? 'row_id' : 'entity_id';
+
+        $select = $this->connection->select()
+            ->from(['r' => $this->resourceConnection->getTableName('catalog_product_relation')], ['child_id'])
+            ->join(['e' => $productTable], 'e.' . $linkField . ' = r.parent_id', [])
+            ->where('e.entity_id IN (?)', $parentIds);
+
+        return array_map('intval', $this->connection->fetchCol($select));
     }
 
     /**
