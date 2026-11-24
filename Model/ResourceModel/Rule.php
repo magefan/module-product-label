@@ -121,6 +121,11 @@ class Rule extends \Magento\Framework\Model\ResourceModel\Db\AbstractDb implemen
             );
         }
 
+        /* the column is added by Extra and stays in the table after Extra is removed */
+        if (is_array($object->getData('apply_by'))) {
+            $object->setData('apply_by', implode(',', $object->getData('apply_by')));
+        }
+
         return parent::_beforeSave($object);
     }
 
