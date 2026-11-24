@@ -46,15 +46,18 @@ var MagefanPL = {
 
     replaceLabel: function (labelEl, maintProductID, selectedProductId) {
         const labels = window.mfLabelProcessed[maintProductID];
+        /* only regular positions, labels of custom positions go after Config::SPLITTERS_FOR_CUSTOM_POSITIONS */
+        const labelHtml = labels && labels[selectedProductId]
+            ? labels[selectedProductId].split('<!--mfcp_splitter--!>')[0].trim() : '';
         /* label rendered with the page, shown again when no product is selected */
         const originalLabel = labelEl.mfOriginalLabel || labelEl.cloneNode(true);
         let newLabel;
 
         if (!selectedProductId) {
             newLabel = originalLabel.cloneNode(true);
-        } else if (labels && labels[selectedProductId]) {
+        } else if (labelHtml) {
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = labels[selectedProductId];
+            tempDiv.innerHTML = labelHtml;
             newLabel = tempDiv.firstElementChild;
         } else {
             /* selected product has no labels: keep an empty container for the next selection */
