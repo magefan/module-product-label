@@ -26,33 +26,55 @@ var MagefanPL = {
             return;
         }
 
-        const url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
+        let url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
 
-        MagefanJs.ajax({'url':url, 'type': 'GET',
-            success:  function(response) {
+        /* the same url as MagefanJs.ajax sends, so the response stays cacheable */
+        if (window.MagefanJs && window.MagefanJs.requestOptionsModifier) {
+            url = window.MagefanJs.requestOptionsModifier({url: url}).url;
+        }
+
+        fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then(function (response) {
+                if (!response.ok) {
+                    throw new Error('HTTP ' + response.status);
+                }
+
+                return response.json();
+            })
+            .then(function (response) {
                 const latest = self.pendingRequests[maintProductID];
-                delete self.pendingRequests[maintProductID];
 
-                response = JSON.parse(response);
                 window.mfLabelProcessed[maintProductID] = response.labels;
                 self.replaceLabel(latest.labelEl, maintProductID, latest.selectedProductId);
-            }
-        });
+            })
+            .catch(function () {
+                /* keep the current label, the next selection sends a new request */
+            })
+            .finally(function () {
+                delete self.pendingRequests[maintProductID];
+            });
     },
 
     replaceLabel: function (labelEl, maintProductID, selectedProductId) {
+        const labels = window.mfLabelProcessed[maintProductID];
+        /* label rendered with the page, shown again when no product is selected */
+        const originalLabel = labelEl.mfOriginalLabel || labelEl.cloneNode(true);
+        let newLabel;
 
-        let labelHtml =  window.mfLabelProcessed[maintProductID] && window.mfLabelProcessed[maintProductID][selectedProductId]
-            ? window.mfLabelProcessed[maintProductID][selectedProductId] : '';
-
-        if (labelHtml) {
+        if (!selectedProductId) {
+            newLabel = originalLabel.cloneNode(true);
+        } else if (labels && labels[selectedProductId]) {
             const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = labelHtml;
-            const newLabel = tempDiv.firstElementChild;
+            tempDiv.innerHTML = labels[selectedProductId];
+            newLabel = tempDiv.firstElementChild;
+        } else {
+            /* selected product has no labels: keep an empty container for the next selection */
+            newLabel = originalLabel.cloneNode(false);
+        }
 
-            if (newLabel) {
-                labelEl.replaceWith(newLabel);
-            }
+        if (newLabel) {
+            newLabel.mfOriginalLabel = originalLabel;
+            labelEl.replaceWith(newLabel);
         }
     }
 };
