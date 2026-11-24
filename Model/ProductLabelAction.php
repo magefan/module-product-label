@@ -413,6 +413,9 @@ class ProductLabelAction
 
             if (empty($storeIds) || in_array(0, $storeIds)) {
                 $storeIds = $this->getAllStoreIds();
+            } else {
+                // Skip store views that were deleted after the rule was saved
+                $storeIds = array_intersect($storeIds, $this->getAllStoreIds());
             }
         }
 
@@ -428,6 +431,7 @@ class ProductLabelAction
     private function getDefaultStoreIdsPerWebsite($rule): array
     {
         $defaultStoreIds = [];
+        $websiteIds = [];
         $storeIds = (array)$rule->getStoreIds();
 
         // [website_id => default_store_id]
@@ -436,7 +440,8 @@ class ProductLabelAction
         if (in_array(0, $storeIds)) {
             $defaultStoreIds = $websiteToDefaultStoreMap;
         } else {
-            foreach ($storeIds as $id) {
+            // Skip store views that were deleted after the rule was saved
+            foreach (array_intersect($storeIds, $this->getAllStoreIds()) as $id) {
                 $websiteId = $this->storeManager->getStore($id)->getWebsiteId();
                 $websiteIds[$websiteId] = $websiteId;
             }
