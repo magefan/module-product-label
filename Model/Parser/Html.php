@@ -84,22 +84,14 @@ class Html
         $customPositions = $this->mapProductToCustomPosition[$productId] ?? [];
 
         if (strpos($replace, Config::SPLITTERS_FOR_CUSTOM_POSITIONS) !== false) {
-            if ($customPositions) {
-                $customPositionsLabels = explode(Config::SPLITTERS_FOR_CUSTOM_POSITIONS, $replace);
-                $replace = $customPositionsLabels[0];
-                unset($customPositionsLabels[0]);
+            // regular labels, then pairs of custom position name and its labels
+            $parts = explode(Config::SPLITTERS_FOR_CUSTOM_POSITIONS, $replace);
+            $replace = array_shift($parts);
 
-                foreach ($customPositionsLabels as $label) {
-                    foreach ($customPositions as $customPosition) {
-                        if (strpos($label, $customPosition) !== false) {
-                            $output = str_replace(self::COMMENT_PREFIX . $productId . '____' . $customPosition .  self::COMMENT_SUFFIX, $label, $output);
-                        }
-                    }
+            foreach (array_chunk($parts, 2) as [$customPosition, $label]) {
+                if (isset($customPositions[$customPosition])) {
+                    $output = str_replace(self::COMMENT_PREFIX . $productId . '____' . $customPosition .  self::COMMENT_SUFFIX, $label, $output);
                 }
-            } else {
-                // leave only labels with regular positions
-                $replace = explode(Config::SPLITTERS_FOR_CUSTOM_POSITIONS, $replace);
-                $replace = $replace[0];
             }
         }
     }
