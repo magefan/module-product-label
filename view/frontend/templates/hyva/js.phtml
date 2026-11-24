@@ -92,7 +92,7 @@
     });
 
     window.addEventListener('listing-configurable-selection-changed', function (e) {
-        let labelEl = document.querySelector('input[name=\"product\"][value=\"'+ e.detail.productId +'\"]').closest('form').querySelector('.mf-label-container'),
+        let labelEl = document.querySelector('input[name=\"product\"][value=\"'+ e.detail.productId +'\"]')?.closest('form')?.querySelector('.mf-label-container'),
             forProductPage = 0;
 
         if (labelEl) {
