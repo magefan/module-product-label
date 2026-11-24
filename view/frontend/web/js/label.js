@@ -26,33 +26,22 @@ var MagefanPL = {
             return;
         }
 
-        let url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
+        const url = `${BASE_URL}mfpl/label/get?product_ids=${maintProductID}&get_children=1&product_page=${forProductPage}`;
 
-        /* the same url as MagefanJs.ajax sends, so the response stays cacheable */
-        if (window.MagefanJs && window.MagefanJs.requestOptionsModifier) {
-            url = window.MagefanJs.requestOptionsModifier({url: url}).url;
-        }
-
-        fetch(url, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
-            .then(function (response) {
-                if (!response.ok) {
-                    throw new Error('HTTP ' + response.status);
-                }
-
-                return response.json();
-            })
-            .then(function (response) {
+        MagefanJs.ajax({'url':url, 'type': 'GET',
+            success:  function(response) {
                 const latest = self.pendingRequests[maintProductID];
+                delete self.pendingRequests[maintProductID];
 
+                response = JSON.parse(response);
                 window.mfLabelProcessed[maintProductID] = response.labels;
                 self.replaceLabel(latest.labelEl, maintProductID, latest.selectedProductId);
-            })
-            .catch(function () {
+            },
+            error: function () {
                 /* keep the current label, the next selection sends a new request */
-            })
-            .finally(function () {
                 delete self.pendingRequests[maintProductID];
-            });
+            }
+        });
     },
 
     replaceLabel: function (labelEl, maintProductID, selectedProductId) {
