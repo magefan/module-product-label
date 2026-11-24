@@ -140,6 +140,8 @@ class GetLabels implements GetLabelsInterface
     public function getAvailableProductLabels($rules, $productRuleIds, $forProductPage = false): array
     {
         $productLabelsCount = 0;
+        // 0 or empty value saved before the config field was validated
+        $maxLabels = $this->config->getLabelsPerProduct() ?: 1;
         $productLabels = [];
 
         $discardRulePerPosition = [];
@@ -169,7 +171,7 @@ class GetLabels implements GetLabelsInterface
                 }
             }
 
-            if ($productLabelsCount >= $this->config->getLabelsPerProduct()) {
+            if ($productLabelsCount >= $maxLabels) {
                 break;
             }
         }

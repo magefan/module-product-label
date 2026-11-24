@@ -31,6 +31,7 @@
                 </field>
                 <field id="labels_per_product" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Max. Number Of Labels Applied To Product (Plus)</label>
+                    <validate>required-entry validate-digits validate-greater-than-zero</validate>
                 </field>
 
                 <field id="pp_selector" translate="css class parent label container" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
