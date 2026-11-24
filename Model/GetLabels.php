@@ -118,10 +118,11 @@ class GetLabels implements GetLabelsInterface
                         ->toHtml();
 
                     if ($htmlToReplace) {
-                        // position name is passed with its labels, so the parser does not look for it in the label html
+                        // position name is passed with its labels, so the parser does not look for it in the label html,
+                        // and in a comment, so it is not shown where the html is used as is (GraphQL)
                         // product may have no labels in regular positions
                         $replaceMap[$productId] = ($replaceMap[$productId] ?? '')
-                            . Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $customPositionName
+                            . Config::SPLITTERS_FOR_CUSTOM_POSITIONS . '<!--' . $customPositionName . '-->'
                             . Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $htmlToReplace;
                     }
                 }

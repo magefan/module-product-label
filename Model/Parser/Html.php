@@ -88,7 +88,9 @@ class Html
             $parts = explode(Config::SPLITTERS_FOR_CUSTOM_POSITIONS, $replace);
             $replace = array_shift($parts);
 
-            foreach (array_chunk($parts, 2) as [$customPosition, $label]) {
+            foreach (array_chunk($parts, 2) as [$customPositionComment, $label]) {
+                $customPosition = preg_replace('/^<!--(.*)-->$/s', '$1', $customPositionComment);
+
                 if (isset($customPositions[$customPosition])) {
                     $output = str_replace(self::COMMENT_PREFIX . $productId . '____' . $customPosition .  self::COMMENT_SUFFIX, $label, $output);
                 }
