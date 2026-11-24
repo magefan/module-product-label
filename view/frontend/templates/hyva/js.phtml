@@ -45,23 +45,34 @@
                     response = JSON.parse(response);
                     window.mfLabelProcessed[maintProductID] = response.labels;
                     self.replaceLabel(latest.labelEl, maintProductID, latest.selectedProductId);
+                },
+                error: function () {
+                    /* keep the current label, the next selection sends a new request */
+                    delete self.pendingRequests[maintProductID];
                 }
             });
         },
 
         replaceLabel: function (labelEl, maintProductID, selectedProductId) {
+            const labels = window.mfLabelProcessed[maintProductID];
+            /* label rendered with the page, shown again when no product is selected */
+            const originalLabel = labelEl.mfOriginalLabel || labelEl.cloneNode(true);
+            let newLabel;
 
-            let labelHtml =  window.mfLabelProcessed[maintProductID] && window.mfLabelProcessed[maintProductID][selectedProductId]
-                ? window.mfLabelProcessed[maintProductID][selectedProductId] : '';
-
-            if (labelHtml) {
+            if (!selectedProductId) {
+                newLabel = originalLabel.cloneNode(true);
+            } else if (labels && labels[selectedProductId]) {
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = labelHtml;
-                const newLabel = tempDiv.firstElementChild;
+                tempDiv.innerHTML = labels[selectedProductId];
+                newLabel = tempDiv.firstElementChild;
+            } else {
+                /* selected product has no labels: keep an empty container for the next selection */
+                newLabel = originalLabel.cloneNode(false);
+            }
 
-                if (newLabel) {
-                    labelEl.replaceWith(newLabel);
-                }
+            if (newLabel) {
+                newLabel.mfOriginalLabel = originalLabel;
+                labelEl.replaceWith(newLabel);
             }
         }
     };
@@ -81,7 +92,7 @@
     });
 
     window.addEventListener('listing-configurable-selection-changed', function (e) {
-        let labelEl = document.querySelector('input[name=\"product\"][value=\"'+ e.detail.productId +'\"]').closest('form').querySelector('.mf-label-container'),
+        let labelEl = document.querySelector('input[name=\"product\"][value=\"'+ e.detail.productId +'\"]')?.closest('form')?.querySelector('.mf-label-container'),
             forProductPage = 0;
 
         if (labelEl) {

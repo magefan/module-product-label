@@ -128,7 +128,11 @@ class Get extends \Magento\Framework\App\Action\Action
     {
         $childProductIds = [];
 
-        $currentProduct = $this->productRepository->getById($parentProductId);
+        try {
+            $currentProduct = $this->productRepository->getById($parentProductId);
+        } catch (\Magento\Framework\Exception\NoSuchEntityException $e) {
+            return $childProductIds;
+        }
 
         if ('configurable' != $currentProduct->getTypeId()) {
             return $childProductIds;

@@ -118,7 +118,11 @@ class GetLabels implements GetLabelsInterface
                         ->toHtml();
 
                     if ($htmlToReplace) {
-                        $replaceMap[$productId] .= Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $htmlToReplace;
+                        // position name is passed with its labels, so the parser does not look for it in the label html
+                        // product may have no labels in regular positions
+                        $replaceMap[$productId] = ($replaceMap[$productId] ?? '')
+                            . Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $customPositionName
+                            . Config::SPLITTERS_FOR_CUSTOM_POSITIONS . $htmlToReplace;
                     }
                 }
             }
@@ -140,6 +144,8 @@ class GetLabels implements GetLabelsInterface
     public function getAvailableProductLabels($rules, $productRuleIds, $forProductPage = false): array
     {
         $productLabelsCount = 0;
+        // 0 or empty value saved before the config field was validated
+        $maxLabels = $this->config->getLabelsPerProduct() ?: 1;
         $productLabels = [];
 
         $discardRulePerPosition = [];
@@ -168,7 +174,7 @@ class GetLabels implements GetLabelsInterface
                 }
             }
 
-            if ($productLabelsCount >= $this->config->getLabelsPerProduct()) {
+            if ($productLabelsCount >= $maxLabels) {
                 break;
             }
         }
