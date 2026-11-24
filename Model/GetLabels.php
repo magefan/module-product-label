@@ -146,8 +146,6 @@ class GetLabels implements GetLabelsInterface
 
         foreach ($rules as $rule) {
             if (in_array($rule->getId(), $productRuleIds)) {
-                $productLabelsCount++;
-
                 if ($forProductPage) {
                     $position = $rule->getPpPosition() ?: $rule->getPosition();
                 } else {
@@ -155,6 +153,9 @@ class GetLabels implements GetLabelsInterface
                 }
 
                 if (!isset($discardRulePerPosition[$position])) {
+                    // only labels that are shown count toward the max labels limit
+                    $productLabelsCount++;
+
                     if ($position == 'custom') {
                         $customPosition = $forProductPage ? $rule->getData('pp_custom_position') : $rule->getData('custom_position');
                         $productLabels[$position][$customPosition][] = $rule->getLabelData($forProductPage);
