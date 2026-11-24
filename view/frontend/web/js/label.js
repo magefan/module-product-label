@@ -52,18 +52,14 @@ var MagefanPL = {
 
         if (!selectedProductId) {
             newLabel = originalLabel.cloneNode(true);
-        } else if (labels && labels[selectedProductId]) {
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = labels[selectedProductId];
-            newLabel = tempDiv.firstElementChild;
         } else {
-            /* selected product has no labels: keep an empty container for the next selection */
-            newLabel = originalLabel.cloneNode(false);
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = labels && labels[selectedProductId] || '';
+            /* no labels in regular positions: keep an empty container for the next selection */
+            newLabel = tempDiv.querySelector('.mf-label-container') || originalLabel.cloneNode(false);
         }
 
-        if (newLabel) {
-            newLabel.mfOriginalLabel = originalLabel;
-            labelEl.replaceWith(newLabel);
-        }
+        newLabel.mfOriginalLabel = originalLabel;
+        labelEl.replaceWith(newLabel);
     }
 };
